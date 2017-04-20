@@ -183,6 +183,7 @@
     <Content Include="Content\glossary-logo.png" />
     <Content Include="Content\last-page.png" />
     <Content Include="Content\nav-sprite.png" />
+    <Content Include="Content\resize-icon.jpg" />
     <Content Include="Content\soundIcon.png" />
     <Content Include="Content\sprite.all.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />

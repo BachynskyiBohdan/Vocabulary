@@ -596,6 +596,12 @@ table, table th {
     .phrase-container:hover .remove-button {
         visibility: visible;
     }
+    .pop-up-widget .remove-button {
+        position: absolute;
+        left: 20px;
+        bottom: 20px;
+    }
+
 
 .widget-glossary-container {
     top: 5%;
@@ -605,10 +611,6 @@ table, table th {
     height: 90%;
     border: 1px solid black;
 }
-    .widget-glossary-container .remove-button {
-        position: absolute;
-        bottom: 20px;
-    }
 
 .pop-up-widget .left-button {
     position: absolute;
@@ -669,7 +671,6 @@ a.disabled {
         margin: 40px auto;
     }
 
-
 .widget-examples-container{
     display: inline-block;
     float:right;
@@ -678,8 +679,21 @@ a.disabled {
     font-size: 1.1em;
     overflow: auto;
 }
+.resize-button {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    width: 20px;
+    height: 21px;
+    cursor: pointer;
+    background: url("resize-icon.jpg") -3px -5px no-repeat;
+    background-size: 60px 55px;
+}
+    .resize-button.expand {
+        background-position: -33px -5px;
+    }
 
-/************************User Controller***************************
+/************************Vocabulary Header***************************
 ------------------------------------------------------------------*/
 
 .header-menu {
