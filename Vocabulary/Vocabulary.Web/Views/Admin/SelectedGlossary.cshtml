@@ -1,0 +1,91 @@
+﻿@model Glossary
+@{
+    ViewBag.Title = "SelectedGlossary";
+}
+
+@section header
+{
+    @{Html.RenderPartial("PartialAdminHeader");}
+}
+
+<div class="main">
+    <div class="layout-positioner">
+
+        <div class="main-header">
+            @if (TempData.ContainsKey("Success"))
+            {
+                <div class="label label-success">@TempData["Success"]</div>
+            }
+            @if (TempData.ContainsKey("Success"))
+            {
+                <div class="label label-success">@TempData["Success"]</div>
+            }
+            
+            <span>Glossary: @Model.Name</span>
+
+            <div class="navigation-menu">
+                @Html.ActionLink("Back to Glossaries", "GlossariesMainPage", null,
+                    new { @class = "left btn-primary", title = "Back to main page" })
+
+                @Html.ActionLink("Add Phrases", "AddPhrasesToGlossary", null,
+                    new { title = "Add existing phrases to glossary" })
+
+                @Html.ActionLink("Parse phrases", "AddParsePhrasesToGlossary", null,
+                    new { title = "Add new phrases by parsing pages to glossary" })
+            </div>
+        </div>
+
+        <div class="layout-collumn layout-collumn-menu">
+
+        </div>
+
+        <div class="layout-collumn layout-collumn-main container-fluid">
+            <div class="words-container">
+                <table class="table table-hover">
+                    <thead>
+                        <tr onclick="sortTable">
+                            <th>ID</th>
+                            <th>Phrase</th>
+                            <th>PhraseType</th>
+                            <th>Transcription</th>
+                            <th>Frequency</th>
+                            <th>LanguageID</th>
+                            <th>Audio</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var phrase in Model.GlobalPhrases)
+                        {
+                            <tr>
+                                <td>@phrase.Id</td>
+                                <td>@phrase.Phrase</td>
+                                <td>@phrase.PhraseType</td>
+                                <td>@phrase.Transcription</td>
+                                <td>@phrase.Frequency</td>
+                                <td>@phrase.LanguageId</td>
+                                <td>
+                                    <img src="~/Content/soundIcon.png" style="width: 25px; height: 25px;" alt="Play"
+                                         onclick=" playAudio(@phrase.Id.ToString())" />
+
+                                    <audio id="@phrase.Id.ToString()">
+                                        <source src="@Url.Action("GetPhraseAudio", new { id = phrase.Id })" />
+                                    </audio>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts
+{
+    <script>
+        $('.main-menu li:first-child a').addClass("selected");
+        $('.main-menu li:last-child a').removeClass("selected");
+    </script>
+    <script src="~/Scripts/Users/mainPage.js"></script>
+}

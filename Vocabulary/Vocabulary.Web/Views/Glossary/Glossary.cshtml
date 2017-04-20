@@ -1,0 +1,113 @@
+﻿@model Vocabulary.Web.Models.GlossaryController.GlossaryViewModel
+@{
+    ViewBag.Title = "Glossary";
+    var tlId = @Request.QueryString["langId"];
+}
+
+@section header
+{ 
+    @{Html.RenderPartial("PartialUserHeader");}
+}
+
+<div class="main">
+    <div class="layout-positioner">
+        <div class="main-header">
+            <span>@Model.Glossary.Name</span>
+        </div>
+        <div class="layout-collumn container-fluid">
+            @{ var index = 0; }
+            @foreach(var phrase in Model.Glossary.GlobalPhrases)
+            {
+                <div class="phrase-container">
+                    <div class="add-button">
+                        @if (Model.StateList[index])
+                        {
+                            <div class="added" title="Already added to vocabulary"></div>
+                        }
+                        else
+                        {
+                            <div class="not-added" data-phrase-id="@phrase.Id" data-glossary-id="@Model.Glossary.Id"
+                                  title="Add phrase to vocabulary"></div>
+                        }
+                    </div>
+                    
+                    <div class="audio">
+                        <img src="~/Content/soundIcon.png" style="width: 25px; height: 25px;" onclick="playAudio('audio-@phrase.Id.ToString()')" />
+
+                        <audio id="audio-@phrase.Id.ToString()">
+                            <source src="@Url.Action("GetGlobalPhraseAudio", new { id = phrase.Id })" />
+                        </audio>
+                    </div>
+
+                    <div class="content-container" onclick="getDataAjax(@Model.Glossary.Id, @tlId , @index)">
+                        <div class="phrase">@phrase.Phrase</div>
+                        @if (!string.IsNullOrEmpty(phrase.Transcription))
+                        {
+                            <div class="transcription">@phrase.Transcription</div>
+                        }
+                        —
+                        <div class="translation">
+                            @Model.Translations[index].TranslationPhrase
+                        </div>
+                    </div>
+                    
+                    <div class="information">
+                        @if (phrase.Frequency != null)
+                        {
+                            <div class="frequency" title="word rank">@phrase.Frequency</div>
+                        }
+                    </div>
+
+                </div>
+                index++;
+            }
+        </div>
+    </div>
+</div>
+
+
+<div class="pop-up-widget" style="display: none">
+    <div class="pop-up-widget background"></div>
+    <div class="container widget-glossary-container">
+        <div class="widget-phrase-container">
+            <div class="phrase"></div>
+
+            <div class="audio" onclick='playAudio("widget-audio")'>
+                <img src="~/Content/soundIcon.png" style="width: 25px; height: 25px;" />
+                <div class="transcription"></div>
+                <audio id="widget-audio"></audio>
+            </div>
+            —
+            <div class="translation"></div>
+            <div class="frequency" title="word rank"></div>
+            
+            <div class="add-buttons" data-status="not-added" data-glossary-id="@Model.Glossary.Id">
+                @*TODO: add possibility to remove from vocabulary?*@
+                <a class="btn btn-default" data-status="learned" href="javascript: void(0)"
+                   title="Add phrase to vocabulary as learned">Add as learned</a>
+                <a class="btn btn-default" data-status="unknown" href="javascript: void(0)"
+                   title="Add phrase to vocabulary as unknown">Add as unknown</a>
+            </div>
+        </div>
+        <div class="widget-examples-container">
+            <h1>Examples:</h1>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Phrase</th>
+                        <th>Translation</th>
+                        <th>Audio</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+    <a class="left-button" href="javascript: void(0)"></a>
+    <a class="right-button" href="javascript: void(0)"> </a>
+</div>
+
+@section scripts
+{ 
+    <script src="/Scripts/Users/glossaryScript.js"></script>
+}

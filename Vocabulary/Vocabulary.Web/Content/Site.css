@@ -1,0 +1,749 @@
+﻿body {
+    font-size: 13px;
+    font-family: "Segoe UI", Verdana, Helvetica, Sans-Serif;
+    color: #232323;
+    background-color: rgb(34, 180, 115);
+    margin: 0;
+}
+
+header, footer, nav, section {
+    display: block;
+}
+
+
+/* Styles for basic forms
+-----------------------------------------------------------*/
+
+fieldset {
+    border: 1px solid #ddd;
+    padding: 0 1.4em 1.4em 1.4em;
+    margin: 0 0 1.5em 0;
+}
+
+legend {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+textarea {
+    min-height: 75px;
+}
+
+.editor-label {
+    margin: 1em 0 0 0;
+}
+
+.editor-field {
+    margin: 0.5em 0 0 0;
+}
+
+
+/* Styles for validation helpers
+-----------------------------------------------------------*/
+.field-validation-error {
+    color: #f00;
+}
+
+.field-validation-valid {
+    display: none;
+}
+
+.input-validation-error {
+    border: 2px solid red !important;
+    background-color: rgba(255,150,150,0.95);  
+}
+.input-validation-error:focus {
+    background-color: rgba(255,150,150,0.55);  
+}
+
+.validation-summary-errors {
+    font-weight: bold;
+    text-align: left;
+    color: #f00;
+}
+
+.validation-summary-valid {
+    display: none;
+}
+
+/************************Admin Controller***************************
+-------------------------------------------------------------------*/
+
+/***********************Header**************************/
+.header {
+    position: fixed;
+    z-index: 1000;
+    width: 100%;
+    top: 0;
+    height: 60px !important;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 10px;
+    box-sizing: content-box;
+}
+    .header .info {
+        display: inline-block;
+        color: white;
+        font-size: 1.6em;
+    }
+    .header .info span {
+        text-decoration: underline;
+    }
+
+    .header .layout-collumn {
+        float: right;
+    }
+    .header .layout-collumn-left {
+        float: left;
+    }
+
+    .header .layout-positioner {
+        width: 80%;
+        margin-left: auto;
+        margin-right: auto;
+        height: 100%;
+    }
+
+.main-logo img{
+    float: left;
+    height: 65px;
+}
+
+.main-menu {
+    list-style: none;
+    float: left;
+}
+    .main-menu li {
+        display: inline-block;
+    }
+
+.button {
+    display: inline-block;
+    padding: 5px 20px 10px 20px;
+    margin: 10px;
+    background: white;
+    color: black;
+    text-decoration: none;
+    font-size: 1.5em;
+    border-radius: 5px;
+    box-shadow: 1px 1px 5px black;
+}
+    .button.selected {
+        background: rgb(10, 200, 40);
+        box-shadow: 1px 1px 10px green;
+    }
+    .button:hover {
+        box-shadow: 0px 0px 25px black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+/***********************Widget**************************/
+.pop-up-widget {
+    position: fixed;
+    z-index: 10000;
+    left: 0px;
+    top: 0px;
+    text-align: center;
+    width: 100%;
+    height: 100%;
+}
+.background {
+    display: block;
+    opacity: 0.65;
+    background: #34495e;
+    z-index: 1;
+}
+.container{
+    display: block;
+    position: relative;
+    width: auto;
+    background: white;
+    margin: 0 auto;
+    border-radius: 10px;
+    font-family: Open Sans,Arial,sans-serif;
+}
+    .container h1 {
+        font-size: 2em;
+        font-weight: normal;
+    }
+
+.widget-container {
+    top: 50px;
+    z-index: 2;
+    width: 500px;
+    min-height: 300px;
+    border: 1px solid black;
+}
+.header-container {
+    border-bottom: 5px solid greenyellow;
+    border-radius: 10px 10px 0 0;
+}
+    .header-container h1 {
+        display: inline-block;
+        margin: 15px;
+    }
+
+.register-container, .signin-container {
+    margin: 20px 0 50px 0;
+}
+
+/***********************Main**************************/
+.main {
+    margin-top: 80px;
+    width: 100%;
+    height: 100%;
+}
+    .main .layout-positioner {
+        width: 90%;
+        height: 100%;
+        min-height: 100vh;
+        margin: 0 auto;
+        background: white;
+        overflow: hidden;
+    }
+
+.main-header {
+    position: relative;
+    background: #f2f2f4;
+    text-align: center;
+    min-height: 100px;
+    padding: 1px;
+}
+    .main-header span {
+        display: block;
+        margin: 10px;
+        font-size: 2em;
+        font-weight: bold;
+    }
+    /*.main-header a {
+        display: inline-block;
+        padding: 10px 15px;
+        border-radius: 5px;
+        margin: 0 10px;
+        box-shadow: 1px 1px 3px black;
+    }
+
+    .main-header .left {
+        margin-top: 15px;
+        position: absolute;
+        left: 10px;
+    }*/
+    .navigation-menu a, .main-header a.left {
+        display: inline-block;
+        padding: 10px 15px;
+        border-radius: 5px;
+        margin: 0 10px;
+        box-shadow: 1px 1px 3px black;
+    }
+
+    .main-header a.left {
+        margin-top: 15px;
+        position: absolute;
+        left: 10px;
+    }
+
+.navigation-menu {
+    position: relative;
+    text-align: center;
+    margin-bottom: 5px;
+    min-height: 40px;
+}
+    .navigation-menu .left {
+        margin-top: 0px;
+        position: absolute;
+        left: 10px;
+    }
+
+
+/*Form Fields
+---------------------------------------------------*/
+
+form {
+    display: table;
+    margin: 0px auto;
+}
+
+.form-container {
+    height: 100%;
+    padding: 20px 0 40px 0;
+}
+
+.field-container {
+    overflow: hidden;
+    width: 290px;
+}
+    .field-container img {
+        width: 290px;
+    }
+    .field-container textarea {
+        max-width: 290px;
+        margin-bottom: 5px;
+    }
+    .field-container input {
+        display: block;
+        margin: 0px;
+        margin-top: 5px;
+        padding: 5px;
+        width: 100%;
+        height: auto;
+        font-size: 16px;
+        border-radius: 5px;
+        box-sizing: border-box;
+    }
+.auth-field input {
+    margin: 10px 0 10px 30px;
+    width: 260px;
+}
+.auth-button input {
+
+    background: rgb(34, 255, 115);
+    font-size: 1.5em;
+}
+
+.logo {
+    position: relative;
+    left: 0;
+    top: 20px;
+    float: left;
+    width: 25px;
+    height: 25px;
+    background: url("sprite.all.png") no-repeat;
+}
+    .logo-username {
+        background-position: 2px -115px;
+    }
+    .logo-password {
+        background-position: -25px -115px;
+    }
+    .logo-email {
+        background-position: -52px -113px;
+    }
+
+.success-adding {
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    background: url("added.png") no-repeat;
+    background-size: 25px 25px;
+}
+
+/* Table
+-------------------------------------------*/
+table, table th {
+    text-align: center;
+}
+
+.info-message {
+    display: block;
+    padding: 5px;
+    font-size: 1.2em;
+    background: #191919;
+    background: rgba(25, 25, 25, 0.5);
+}
+
+.navigation-container {
+    margin: 10px;
+}
+    .navigation-container a {
+        margin: 5px;
+        padding: 2px 10px;
+        background: rgb(215, 215, 215);
+        font-size: 1.3em;
+        font-family: Comic Sans MS, TextNewRoman;
+        font-stretch: ultra-expanded;
+        color: black;
+    }
+
+    .navigation-container .selected {
+        background: rgb(34, 180, 115);
+
+    }
+
+
+.footer {
+    height: 50px;
+    width: 100%;
+    background: rgb(255, 240, 205);
+}
+
+/************************Glossary Controller***************************
+----------------------------------------------------------------------*/
+
+.language-container > ul {
+    display: inline-block;
+    position: relative;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.language-container > ul:hover ul {
+    display: block;
+}
+.language-container .list {
+    position: absolute;
+    display: none;
+    list-style: none;
+    overflow:auto;
+    max-height: 500px;
+    width: 110px;
+        
+}
+.language-container .list li{
+    margin: 10px 0;
+}
+.language-container span {
+    display: inline;
+    position: relative;
+    bottom: 10px;
+    font-size: 3.5em;
+    font-weight: 300;
+}
+.language-container .language-logo {
+    width: 52px;
+    height: 50px;
+    background: url("flags-logo-sprite.png") 0px 0px no-repeat;
+}
+    .language-container .language-logo.english-logo {
+        background-position: 0px 0;
+    }
+    .language-container .language-logo.ukrainian-logo {
+        background-position: -52px 0;
+    }
+    .language-container .language-logo.russian-logo {
+        background-position: -105px 0;
+    }
+
+
+
+.glossary-container {
+    position: relative;
+    display: inline-block;
+    margin: 20px auto 40px 50px;
+    padding: 0;
+    text-align: center;
+    background: whitesmoke;
+    box-shadow: 1px 1px 5px
+}
+    .glossary-container a {
+        display: block;
+        width: 180px;
+        height: 240px;
+        text-decoration: none;
+    }
+
+    .glossary-container img {
+        width: 180px;
+        height: 160px;
+        
+    }
+    .glossary-container span {
+        display: block;
+        margin-top: 10px;
+        color: black;
+        font-size: 1.15em;
+    }
+    .glossary-container .count {
+        position: absolute;
+        bottom: 5px;
+        right: 5px;
+        color: darkorange;
+    }
+    .glossary-container .language {
+        position: absolute;
+        bottom: 5px;
+        left: 5px;
+        color: darkorange;
+    }
+
+.phrase-container {
+    margin: 0 auto;
+    width: 90%;
+    min-width: 1100px;
+    height: 50px;
+    background: whitesmoke;
+    border-bottom: 1px dotted gray;
+    font-size: 1.2em;
+}
+
+.phrase-container:hover {
+    background: white;
+}
+    .phrase-container .content-container {
+        display: inline-block;
+        width: 65%;
+        white-space: nowrap;
+        margin-top: 12px;
+        cursor: pointer;
+    }
+
+.add-button {
+    display: inline-block;
+    float: left;
+    padding: 15px;
+    margin-right: 10px;
+    border-right: 1px dotted red;
+}
+    .add-button .added {
+        width: 20px;
+        height: 20px;
+        background: url("vocabulary-sprite.png") -160px -20px no-repeat;
+    }
+    .add-button .not-added {
+        width: 20px;
+        height: 20px;
+        background: url("vocabulary-sprite.png") -140px 0px no-repeat;
+        cursor: pointer;
+    }
+    .add-button:hover .not-added {
+        background-position: -160px 0; 
+    }
+
+    .phrase-container .audio {
+        display: inline-block;
+        cursor: pointer;
+        margin: 12px 10px;
+    }
+    .phrase-container .phrase {
+        display: inline-block;
+        margin: 0 10px;
+    }
+    .phrase-container .transcription {
+        display: inline-block;
+        margin: 0 10px;
+    }
+    .phrase-container .translation {
+        display: inline-block;
+        width: 75%;
+        margin: 0 10px -3px 10px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+    .phrase-container .information {
+        display: inline-block;
+        float: right;
+        margin: 12px 10px;
+    }
+    .phrase-container .information {
+        width: 210px;
+        display: inline-block;
+        float: right;
+        margin: 12px 10px;
+    }
+    .phrase-container .frequency {
+        display: inline-block;
+        float: right;
+        margin: 0 10px;
+        text-decoration: underline dotted;
+    }
+    .phrase-container .glossary-info{
+        display: inline-block;
+        max-width: 85px;
+        height: 1.25em;
+        margin: 0 10px -4px 10px;
+        text-decoration: underline dotted;
+        overflow-x: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    .phrase-container .learning-state {
+        display: inline-block;
+        float: right;
+        margin: 0 10px;
+    }
+        .learning-state .unknown {
+            height: 20px;
+            width: 20px;
+            background: url("vocabulary-sprite.png") -20px 0 no-repeat;
+        }
+        .learning-state .first {
+            height: 20px;
+            width: 20px;
+            background: url("vocabulary-sprite.png") -40px 0 no-repeat;
+        }
+        .learning-state .second {
+            height: 20px;
+            width: 20px;
+            background: url("vocabulary-sprite.png") -60px 0 no-repeat;
+        }
+        .learning-state .third {
+            height: 20px;
+            width: 20px;
+            background: url("vocabulary-sprite.png") -80px 0 no-repeat;
+        }
+        .learning-state .known {
+            height: 20px;
+            width: 20px;
+            background: url("vocabulary-sprite.png") -100px 0 no-repeat;
+        }
+
+.remove-button {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background: url("vocabulary-sprite.png") -200px -20px no-repeat;
+}
+    .remove-button:hover {
+        background-position: -200px 0;
+    }
+    .phrase-container .remove-button {
+        display: inline-block;
+        visibility: hidden;
+        float: right;
+        margin: 0 0 0 10px;
+    }
+    .phrase-container:hover .remove-button {
+        visibility: visible;
+    }
+
+.widget-glossary-container {
+    top: 5%;
+    z-index: 2;
+    width: 80%;
+    min-height: 300px;
+    height: 90%;
+    border: 1px solid black;
+}
+    .widget-glossary-container .remove-button {
+        position: absolute;
+        bottom: 20px;
+    }
+
+.pop-up-widget .left-button {
+    position: absolute;
+    z-index: 2;
+    left: 5.5%;
+    top: 50%;
+    width: 45px;
+    height: 45px;
+    background: url("nav-sprite.png") no-repeat;
+}
+.pop-up-widget .right-button {
+    position: absolute;
+    z-index: 2;
+    right: 5.5%;
+    top: 50%;
+    width: 45px;
+    height: 45px;
+    background: url("nav-sprite.png") -47px 0px no-repeat;
+}
+a.disabled {
+    pointer-events: visible;
+    cursor: not-allowed;
+    opacity: 0.2;
+}
+
+.widget-phrase-container {
+    display: inline-block;
+    position: absolute;
+    bottom: 40%;
+    left: 0;
+    font-size: 1.2em;
+    width: 40%;
+}
+    .widget-phrase-container .audio {
+        display: block;
+        margin: 0 10px;
+    }
+    .audio img {
+        cursor: pointer;
+    }
+
+    .widget-phrase-container .phrase {
+        font-size: 1.5em;
+    }
+    .widget-phrase-container .transcription {
+        display: inline-block;
+        cursor: pointer;
+        margin-left: 10px;
+    }
+    .widget-phrase-container .frequency {
+        position: absolute;
+        right: 25%;
+        top: 0;
+        text-decoration: underline dotted;
+        color: rgb(50,50,205);
+    }
+    .widget-phrase-container .add-buttons {
+        margin: 40px auto;
+    }
+
+
+.widget-examples-container{
+    display: inline-block;
+    float:right;
+    width: 60%;
+    height: 100%;
+    font-size: 1.1em;
+    overflow: auto;
+}
+
+/************************User Controller***************************
+------------------------------------------------------------------*/
+
+.header-menu {
+    min-width: 1100px;
+    width: 90%;
+    margin: 0 auto;
+    margin-bottom: 5px;
+    overflow: hidden;
+}
+    .header-menu .btn {
+        display: inline-block;
+        float: left;
+        height: 35px;
+    }
+    .header-menu .search-box {
+        display: inline-block;
+        float: left;
+        margin-left: 10px;
+    }
+        .search-box .btn {
+            margin-left: 10px;
+        }
+        .search-box input {
+            margin-top: 5px;
+        }
+
+    .header-menu .language{
+        display: inline-block;
+        float: left;
+    }
+        .language div {
+            margin: 0;
+            padding: 0 10px;
+        }
+    .header-menu .learning-state {
+        display: inline-block;
+        float: left;
+        margin: 0 10px;
+    }
+
+    .header-menu .phrase-type {
+        display: inline-block;
+        float: left;
+        margin: 0 10px;
+    }
+    .header-menu div.selected {
+        background: rgb(200, 200, 200);
+        border: 1px solid gray;
+        margin: 0 1px;
+    }
+
+    .header-menu .summary {
+        position: relative;
+    }
+    .header-menu .summary .added {
+        background-position: -260px -20px;
+    }
+    .header-menu .summary .not-added {
+        background-position: -260px 0;
+    }
+
+    .header-menu .summary span {
+        position: absolute;
+        bottom: -10px;
+        right: 5px;
+        font-size: 1em;
+    }

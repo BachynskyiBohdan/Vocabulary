@@ -1,0 +1,36 @@
+﻿@model LoginViewModel
+
+@{
+    ViewBag.Title = "Вход";
+}
+
+@section header
+{
+    @{ Html.RenderPartial("PartialGuestHeader");}
+}
+
+<div class="main">
+    <div class="layout-positioner">
+        <div class="main-header">
+            <h1>Вход</h1>
+        </div>
+        <div class="form-container">
+            @using (Html.BeginForm())
+            {
+                <div class="field-container auth-field">
+                    <div class="logo logo-username"></div>
+                    @Html.TextBoxFor(x => x.UserName, new {placeholder = "Username or Email"})
+                    @Html.ValidationMessageFor(x => x.UserName)
+                </div>
+                <div class="field-container auth-field">
+                    <div class="logo logo-password"></div>
+                    @Html.PasswordFor(x => x.Password, new {placeholder = "Password"})
+                    @Html.ValidationMessageFor(x => x.Password)
+                </div>
+                <div class="field-container auth-button">
+                    <input type="submit" value="Ввойти" />
+                </div>
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,50 @@
+﻿@model Glossary
+
+@{
+    ViewBag.Title = "Редактировать глоссарий";
+}
+
+@section header
+{
+    @{ Html.RenderPartial("PartialAdminHeader");}
+}
+
+<div class="main">
+    <div class="layout-positioner">
+        <div class="main-header">
+            <h1>Редактировать глоссарий. Id = @Model.Id</h1>
+        </div>
+        <div class="form-container">
+            @using (Html.BeginForm("EditGlossary", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+
+                @Html.HiddenFor(x => x.Id)
+                @Html.HiddenFor(x => x.LanguageId)
+                <div class="field-container ">
+                    @Html.TextBoxFor(x => x.Name, new { placeholder = "Name", @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.Name)
+                </div>
+
+                <div class="field-container">
+                    <label for="image">Image file:</label>
+                    <input type="file" id="image" name="image" onchange="previewImage(this)" />
+                    <img id="imagePreview" src="@Url.Action("GetGlossaryIcon", new {id = Model.Id})" />
+                </div>
+                
+                <div class="field-container">
+                    <input type="submit" class="btn btn-default" value="Завершить редактирование" />
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        $('.main-menu li:first-child a').addClass("selected");
+        $('.main-menu li:last-child a').removeClass("selected");
+    </script>
+    <script src="~/Scripts/Users/previewImage.js"></script>
+}

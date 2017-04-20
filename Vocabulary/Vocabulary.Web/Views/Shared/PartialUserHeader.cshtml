@@ -1,0 +1,21 @@
+﻿<div class="header">
+    <div class="layout-positioner">
+
+        <div class="layout-collumn">
+            <p class="info">Sign in as <span>@User.Identity.Name</span></p>
+            <a class="button" href="@Url.Action("SignOut", "Account")" title="Sign out">
+                Sign out
+            </a>
+        </div>
+
+        <div class="layout-collumn-left">
+            <a class="main-logo" href="@Url.Action("Glossaries", "Glossary")">
+                <img src="~/Content/glossary-logo.png" alt="LOGO" />
+            </a>
+            <ul class="main-menu">
+                <li><a class="button selected" title="Glossaries main page" href="@Url.Action("Glossaries", "Glossary")">Glossaries</a></li>
+                <li><a class="button" title="Wors main page" href="@Url.Action("Vocabulary", "User")">Vocabulary</a></li>
+            </ul>
+        </div>
+    </div>
+</div>

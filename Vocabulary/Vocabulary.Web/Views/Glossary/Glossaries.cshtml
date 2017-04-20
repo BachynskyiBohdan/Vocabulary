@@ -1,0 +1,16 @@
+﻿@model decimal
+@{
+    ViewBag.Title = "Glossaries";
+}
+
+@section header
+{ 
+    @{ Html.RenderPartial("PartialUserHeader"); }
+}
+
+@Html.Action("GlossariesData", new {langId = @Model})
+
+@section scripts
+{
+    <script src="/Scripts/Users/glossariesScript.js"></script>
+}

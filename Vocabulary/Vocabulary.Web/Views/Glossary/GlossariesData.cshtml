@@ -1,0 +1,87 @@
+﻿@model GlossaryListViewModel
+
+<div class="main">
+    <div class="layout-positioner">
+        <div class="main-header">
+            <span>Glossaries</span>
+            <span id="language" style="display: none">@Model.SelectedLanduage</span>
+            <div class="language-container">
+                <ul id="glossary-language-menu">
+                    <li>
+                        <a id="1" href="javascript: void(0)" title="Selected glossaries language">
+                            <div class="language-logo english-logo"></div>
+                        </a>
+
+                        <ul class="list" id="list-glossary">
+                            <li>
+                                <a id="1" href="javascript: void(0)"
+                                   title="Select glossaries with english language">
+                                    <div class="language-logo english-logo"></div>
+                                </a>
+                            </li>
+                            <li>
+                                <a id="2" href="javascript: void(0)"
+                                   title="Select glossaries with ukrainian language">
+                                    <div class="language-logo ukrainian-logo"></div>
+                                </a>
+                            </li>
+                            <li>
+                                <a id="3" href="javascript: void(0)"
+                                   title="Select glossaries with russian language">
+                                    <div class="language-logo russian-logo"></div>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <span>/</span>
+                <ul id="translation-language-menu">
+                    <li>
+                        <a id="3" href="javascript: void(0)" title="Selected translation language">
+                            <div class="language-logo russian-logo"></div>
+                        </a>
+
+                        <ul class="list" id="list-translation">
+                            <li>
+                                <a id="1" href="javascript: void(0)"
+                                   title="Select phrases translation in english language">
+                                    <div class="language-logo english-logo"></div>
+                                </a>
+                            </li>
+                            <li>
+                                <a id="2" href="javascript: void(0)"
+                                   title="Select phrases translation in ukrainian language">
+                                    <div class="language-logo ukrainian-logo"></div>
+                                </a>
+                            </li>
+                            <li>
+                                <a id="3" href="javascript: void(0)"
+                                   title="Select phrases translation in russian language">
+                                    <div class="language-logo russian-logo"></div>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div id="loading-container" class="alert-info" style="display: none;">loading...</div>
+        </div>
+
+        <div class="layout-collumn container-fluid">
+            <div id="glossaries-container">
+                @foreach (var glossary in Model.Glossaries)
+                {
+                    var lang = @Model.Languages[glossary.LanguageId.ToString()];
+                    <div class="glossary-container" >
+                        <a id="@glossary.Id" href="javascript:void(0)" onclick="onclickEvent(event)">
+                        <img src="@Url.Action("GetGlossaryIcon", new { id = glossary.Id })" />
+                        <span>@glossary.Name</span>
+                        <span class="count">@glossary.Count слов</span>
+                        <span class="language">@lang</span>
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

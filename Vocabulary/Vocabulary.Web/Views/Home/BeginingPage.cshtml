@@ -1,0 +1,108 @@
+﻿@model RegistrationViewModel
+@{
+    ViewBag.Title = "Стартовая страница";
+}
+
+<div class="pop-up-widget" style="display: none">
+    <div class="pop-up-widget background"></div>
+    <div class="container widget-container">
+        <div class="container header-container">
+            <h1 class="signin-button">Вход</h1>
+            <h1 class="register-button">Регистрация</h1>
+        </div>
+        <div class="form-container">
+            <div class="container register-container" style="display: none">
+                @using (Html.BeginForm("Registration", "Account"))
+                {
+                    <div class="field-container auth-field">
+                        <div class="logo logo-username"></div>
+                        @Html.TextBoxFor(x => x.UserName, new { placeholder = "Username" })
+                        @Html.ValidationMessageFor(x => x.UserName)
+                    </div>
+                    <div class="field-container auth-field">
+                        <div class="logo logo-email"></div>
+                        @Html.TextBoxFor(x => x.Email, new { placeholder = "Email" })
+                        @Html.ValidationMessageFor(x => x.Email)
+                    </div>
+                    <div class="field-container auth-field">
+                        <div class="logo logo-password"></div>
+                        @Html.PasswordFor(x => x.Password, new { placeholder = "Password" })
+                        @Html.ValidationMessageFor(x => x.Password)
+                    </div>
+                    <div class="field-container auth-button">
+                        <input type="submit" value="Зарегистрироваться" />
+                    </div>
+                }
+            </div>
+            <div class="container signin-container" style="display: none">
+                @using (Html.BeginForm("SignIn", "Account"))
+                {
+                    <div class="field-container auth-field">
+                        <div class="logo logo-username"></div>
+                        @Html.TextBoxFor(x => x.UserName, new { placeholder = "Username or Email" })
+                        @Html.ValidationMessageFor(x => x.UserName)
+                    </div>
+                    <div class="field-container auth-field">
+                        <div class="logo logo-password"></div>
+                        @Html.PasswordFor(x => x.Password, new { placeholder = "Password" })
+                        @Html.ValidationMessageFor(x => x.Password)
+                    </div>
+                    <div class="field-container auth-button">
+                        <input type="submit" value="Ввойти" />
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section header
+{
+    @{ Html.RenderPartial("PartialGuestHeader");}
+}
+
+
+<div class="main">
+    <div class="layout-positioner">
+        <h2>Index</h2>
+        <div class="layout-collumn1">
+
+        </div>
+        <div class="layout-collumn2">
+
+        </div>
+    </div>
+</div>
+
+
+@section scripts
+{
+    <script>
+        $('.background').click(function() {
+            $('.pop-up-widget').css('display', 'none');
+            console.log('clicked');
+            $("body").css("overflow", "auto");
+        });
+        $('.header .layout-collumn').click(function (e) {
+            changeContainer(e.target);
+            $('.pop-up-widget').css('display', 'block');
+        });
+        $('.header-container').click(function(e) {
+            changeContainer(e.target);
+            $('.pop-up-widget').css('display', 'block');
+        });
+        function changeContainer(target) {
+            if (target.classList.contains("register-button")) {
+                $('h1.register-button').css('text-decoration', 'underline');
+                $('h1.signin-button').css('text-decoration', 'none');
+                $('.register-container').css('display', 'block');
+                $('.signin-container').css('display', 'none');
+            } else if (target.classList.contains("signin-button")) {
+                $('h1.signin-button').css('text-decoration', 'underline');
+                $('h1.register-button').css('text-decoration', 'none');
+                $('.signin-container').css('display', 'block');
+                $('.register-container').css('display', 'none');
+            }
+        }
+    </script>
+}

@@ -1,0 +1,15 @@
+﻿@{
+    ViewBag.Title = "Vocabulary";
+}
+
+@section header
+{
+    @{ Html.RenderPartial("PartialUserHeader"); }
+}
+
+@Html.Action("VocabularyData")
+
+@section scripts
+{
+    <script src="/Scripts/Users/vocabularyScript.js"></script>
+}

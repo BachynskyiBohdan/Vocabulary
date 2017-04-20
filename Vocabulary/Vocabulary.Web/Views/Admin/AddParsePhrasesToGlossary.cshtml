@@ -1,0 +1,39 @@
+﻿@model string
+
+@{
+    ViewBag.Title = "AddParsePhrasesToGlossary";
+}
+@section header
+{
+    @{ Html.RenderPartial("PartialAdminHeader");}
+}
+
+<div class="main">
+    <div class="layout-positioner">
+        <div class="main-header">
+            <h1>Добавление новых фраз в глоссарий @Session["Glossary"] с помощью парсинга веб-страниц</h1>
+        </div>
+        <div class="form-container">
+            @using (Html.BeginForm())
+            {
+                <div class="field-container ">
+                    @Html.TextArea("model", Model,
+                        new { placeholder = "web-addresses", @class = "form-control" })
+                    @Html.ValidationMessage("model")
+                </div>
+
+                <div class="field-container">
+                    <input type="submit" class="btn btn-default" value="Начать парсинг"  />
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        $('.main-menu li:first-child a').addClass("selected");
+        $('.main-menu li:last-child a').removeClass("selected");
+    </script>
+}
