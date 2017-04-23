@@ -20,7 +20,7 @@
                 @Html.AntiForgeryToken()
 
                 @Html.HiddenFor(x => x.GlobalTranslation.GlobalPhraseId)
-                <div class="field-container ">
+                <div>
                     @Html.TextAreaFor(x => x.GlobalTranslation.TranslationPhrase, new { placeholder = "Translation", @class = "form-control" })
                     @Html.ValidationMessageFor(x => x.GlobalTranslation.TranslationPhrase)
                 </div>

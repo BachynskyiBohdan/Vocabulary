@@ -215,19 +215,6 @@ textarea {
         font-size: 2em;
         font-weight: bold;
     }
-    /*.main-header a {
-        display: inline-block;
-        padding: 10px 15px;
-        border-radius: 5px;
-        margin: 0 10px;
-        box-shadow: 1px 1px 3px black;
-    }
-
-    .main-header .left {
-        margin-top: 15px;
-        position: absolute;
-        left: 10px;
-    }*/
     .navigation-menu a, .main-header a.left {
         display: inline-block;
         padding: 10px 15px;
@@ -239,6 +226,7 @@ textarea {
     .main-header a.left {
         margin-top: 15px;
         position: absolute;
+        bottom: 0;
         left: 10px;
     }
 
@@ -271,13 +259,10 @@ form {
 .field-container {
     overflow: hidden;
     width: 290px;
+    margin: 0px auto;
 }
     .field-container img {
         width: 290px;
-    }
-    .field-container textarea {
-        max-width: 290px;
-        margin-bottom: 5px;
     }
     .field-container input {
         display: block;

@@ -13,8 +13,8 @@ using HtmlAgilityPack;
 using Ninject.Infrastructure.Language;
 using Vocabulary.Domain.Abstract;
 using Vocabulary.Domain.Entities;
-using Vocabulary.Web.Models;
 using Vocabulary.Web.Models.Admin;
+using WebGrease.Css.Extensions;
 
 namespace Vocabulary.Web.Controllers
 {
@@ -49,7 +49,7 @@ namespace Vocabulary.Web.Controllers
 
 
         #region Add|Edit|Delete Global Phrase
-        public ActionResult MainPage(int count = 20, int page = 1)
+        public ActionResult MainPage(int count = 50, int page = 1)
         {
             var list = new GlobalListViewModel
             {
@@ -104,19 +104,118 @@ namespace Vocabulary.Web.Controllers
             return View(phraseModel);
         }
 
-        public ActionResult AddNewGlobalPhraseByParse()
+        public ActionResult AddWordsByParse()
         {
             return View((object)"");
         }
         [HttpPost]
-        public async Task<RedirectToRouteResult> AddNewGlobalPhraseByParse(string model)
+        public async Task<RedirectToRouteResult> AddWordsByParse(string model)
         {
             return Task.Factory.StartNew(() =>
             {
                 StartParse(model);
-                TempData["Success"] = string.Format("Phrases was successfully added by parsing.");
+                TempData["Success"] = string.Format("Words was successfully added by parsing.");
             })
                 .ContinueWith(t => RedirectToAction("MainPage")).Result;
+        }
+
+        public ActionResult AddPhrasesByParse()
+        {
+            var model = new ParsePhraseViewModel();
+            _languageRepository.Languages.ForEach(
+                l => model.Languages.Add(new SelectListItem() {Text = l.FullName, Value = l.Id.ToString()}));
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<ActionResult> AddPhrasesByParse(ParsePhraseViewModel model)
+        {
+            if (string.IsNullOrEmpty(model.ParseString))
+            {
+                TempData["Error"] = string.Format("Posted parsing string is empty.");
+            }
+            return Task.Factory.StartNew(async () =>
+            {
+                var lines = model.ParseString.Split('\n');
+                var wordsList = "";
+                var phLangId = decimal.Parse(model.PhraseLanguage);
+                var trLangId = decimal.Parse(model.TranslationLanguage);
+
+                foreach (var line in lines)
+                {
+                    var mas = line.Split('—');
+                    if (mas.Length < 2) continue;
+                    if (mas[0].Trim().Split(' ').Length == 1)
+                    {
+                        wordsList += mas[0] + "\n";
+                        continue;
+                    }
+                    _globalPhraseRepository.Add(new GlobalPhrase()
+                    {
+                        Audio = GenerateAudio(mas[0]),
+                        Phrase = mas[0],
+                        PhraseType = PhraseType.Phrase,
+                        LanguageId = phLangId
+                    });
+                    var text = mas[0];
+                    var phrase = _globalPhraseRepository.Get(p => p.Phrase == text);
+                    _globalTranslationRepository.Add(new GlobalTranslation()
+                    {
+                        GlobalPhraseId = phrase.Id,
+                        LanguageId = trLangId,
+                        TranslationPhrase = mas[1]
+                    });
+                }
+                if (!string.IsNullOrEmpty(wordsList))
+                {
+                    await AddWordsByParse(wordsList);
+                }
+                TempData["Success"] = string.Format("Phrases was successfully added by parsing.");
+            }).ContinueWith(t => RedirectToAction("MainPage")).Result;
+        }
+
+        public ActionResult AddSentencesByParse()
+        {
+            var model = new ParsePhraseViewModel();
+            _languageRepository.Languages.ForEach(
+                l => model.Languages.Add(new SelectListItem() { Text = l.FullName, Value = l.Id.ToString() }));
+            return View(model);
+        }
+        [HttpPost]
+        public ActionResult AddSentencesByParse(ParsePhraseViewModel model)
+        {
+            if (string.IsNullOrEmpty(model.ParseString))
+            {
+                TempData["Error"] = string.Format("Posted parsing string is empty.");
+            }
+
+            var lines = model.ParseString.Split('\n');
+            var phLangId = decimal.Parse(model.PhraseLanguage);
+            var trLangId = decimal.Parse(model.TranslationLanguage);
+
+            foreach (var line in lines)
+            {
+                var mas = line.Split('—');
+                if (mas.Length < 2) continue;
+
+                _globalPhraseRepository.Add(new GlobalPhrase()
+                {
+                    Audio = GenerateAudio(mas[0]),
+                    Phrase = mas[0],
+                    PhraseType = PhraseType.Phrase,
+                    LanguageId = phLangId
+                });
+
+                var text = mas[0];
+                var phrase = _globalPhraseRepository.Get(p => p.Phrase == text);
+                _globalTranslationRepository.Add(new GlobalTranslation()
+                {
+                    GlobalPhraseId = phrase.Id,
+                    LanguageId = trLangId,
+                    TranslationPhrase = mas[1]
+                });
+            }
+            TempData["Success"] = string.Format("Phrases was successfully added by parsing.");
+            return RedirectToAction("MainPage");
         }
 
         public ActionResult EditGlobalPhrase(decimal id)
@@ -308,7 +407,7 @@ namespace Vocabulary.Web.Controllers
 
         #region Add|Edit|Delete Global Examples
 
-        public ActionResult ExampleMainPage(decimal phraseId, int count = 10, int page = 1)
+        public ActionResult ExampleMainPage(decimal phraseId, int count = 50, int page = 1)
         {
             var phrase = _globalPhraseRepository.GlobalPhrases.First(p => p.Id == phraseId);
             Session["GlobalPhrase"] = phrase.Phrase;
@@ -370,6 +469,46 @@ namespace Vocabulary.Web.Controllers
             return View(example);
         }
 
+        public ActionResult AddExamplesByParse(decimal phraseId)
+        {
+            var model = new ParseExamplesViewModel();
+            _globalTranslationRepository.GlobalTranslations
+                .Where(t => t.GlobalPhraseId == phraseId)
+                .ForEach(
+                t => model.Translations.Add(new SelectListItem() { Text = t.TranslationPhrase, Value = t.Id.ToString() }));
+            model.PhraseId = phraseId;
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<ActionResult> AddExamplesByParse(ParseExamplesViewModel model)
+        {
+            if (string.IsNullOrEmpty(model.ParseString))
+            {
+                TempData["Error"] = string.Format("Posted parsing string is empty.");
+            }
+            return Task.Factory.StartNew(() =>
+            {
+                var lines = model.ParseString.Split('\n');
+                var transId = decimal.Parse(model.SelectedTranslation);
+
+                foreach (var line in lines)
+                {
+                    var mas = line.Split('—');
+                    if (mas.Length < 2) continue;
+
+                    _globalExampleRepository.Add(new GlobalExample()
+                    {
+                        Audio = GenerateAudio(mas[0]),
+                        Phrase = mas[0],
+                        Translation = mas[1],
+                        GlobalPhraseId = model.PhraseId,
+                        GlobalTranslationId = transId
+                    });
+                }
+                TempData["Success"] = string.Format("Phrases was successfully added by parsing.");
+            }).ContinueWith(x => RedirectToAction("ExampleMainPage")).Result;
+        }
+
         public ActionResult EditExample(decimal id)
         {
             var example = _globalExampleRepository.Get(e => e.Id == id);
@@ -421,6 +560,10 @@ namespace Vocabulary.Web.Controllers
             {
                 TempData["Error"] = string.Format("An Error occupied. Example with id = {0} wasn't deleted",
                     example.Id);
+            }
+            if (Request.IsAjaxRequest())
+            {
+                return Json(new {result = true}, JsonRequestBehavior.AllowGet);
             }
             return RedirectToAction("ExampleMainPage", new { phraseId = Session["GlobalPhraseId"] });
         }
@@ -514,13 +657,13 @@ namespace Vocabulary.Web.Controllers
             return RedirectToAction("AddPhrasesToGlossary", new {id, langId = Session["LanguageId"]});
         }
 
-        public ActionResult AddParsePhrasesToGlossary()
+        public ActionResult AddWordsToGlossaryByParse()
         {
             var model = "";
             return View((object)model);
         }
         [HttpPost]
-        public async Task<ActionResult> AddParsePhrasesToGlossary(string model)
+        public async Task<ActionResult> AddWordsToGlossaryByParse(string model)
         {
             if (ModelState.IsValid)
             {
@@ -742,8 +885,13 @@ namespace Vocabulary.Web.Controllers
             if (!b)
             {
                 if (glossary != null)
+                {
                     glossary.GlobalPhrases.Add(fp.Phrase);
-                _glossaryRepository.Update(glossary);
+                    _glossaryRepository.Update(glossary);
+                }
+                {
+                    _globalPhraseRepository.Add(fp.Phrase);
+                }
 
                 var phrase = _globalPhraseRepository.Get(p => p.Phrase == fp.Phrase.Phrase);
                 fp.Translation.GlobalPhraseId = phrase.Id;

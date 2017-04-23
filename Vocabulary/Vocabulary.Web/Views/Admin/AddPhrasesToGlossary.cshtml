@@ -56,7 +56,7 @@
                                 <td>@phrase.Frequency</td>
                                 <td>@phrase.LanguageId</td>
                                 <td>
-                                    <img src="~/Content/soundIcon.png" style="width: 25px; height: 25px;" onclick=" playAudio(@phrase.Id.ToString())" />
+                                    <img src="~/Content/soundIcon.png" style="width: 25px; height: 25px;" onclick="playAudio(@phrase.Id.ToString())" />
 
                                     <audio id="@phrase.Id.ToString()">
                                         <source src="@Url.Action("GetPhraseAudio", new { id = phrase.Id })" />

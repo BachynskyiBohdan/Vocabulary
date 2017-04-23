@@ -1,0 +1,36 @@
+﻿@model ParseExamplesViewModel
+@{
+    ViewBag.Title = "Add examples by parse";
+}
+
+@section header
+{
+    @{ Html.RenderPartial("PartialAdminHeader");}
+}
+
+<div class="main">
+    <div class="layout-positioner">
+        <div class="main-header">
+            <h1>Добавление новых примеров с помощью парсинга веб-страниц</h1>
+        </div>
+        <div class="form-container">
+            @using (Html.BeginForm())
+            {
+                <div class="field-container">
+                    @Html.LabelFor(x => x.SelectedTranslation);
+                    @Html.DropDownListFor(x => x.SelectedTranslation, Model.Translations, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.SelectedTranslation)
+                </div>
+                <div>
+                    @Html.TextAreaFor(x => x.ParseString,
+                        new { placeholder = "example template: {phrase} — {translation} \n", @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.ParseString)
+                </div>
+
+                <div class="field-container">
+                    <input type="submit" class="btn btn-default" value="Начать парсинг" />
+                </div>
+            }
+        </div>
+    </div>
+</div>

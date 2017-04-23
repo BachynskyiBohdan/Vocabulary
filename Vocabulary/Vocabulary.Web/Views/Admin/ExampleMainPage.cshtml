@@ -27,7 +27,10 @@
             <div class="navigation-menu">
                 @Html.ActionLink("Back to Phrases", "MainPage", null, new { @class = "left btn-primary", title = "Back to main page" })
 
-                @Html.ActionLink("Add Example", "AddExample", new { phraseId = Session["GlobalPhraseId"] }, new { @class = "btn-default", title="Add new example"})
+                @Html.ActionLink("Add Example", "AddExample", new { phraseId = Session["GlobalPhraseId"] }, 
+                    new { @class = "btn-default", title="Add new example"})
+                @Html.ActionLink("Parse Examples", "AddExamplesByParse", new { phraseId = Session["GlobalPhraseId"] }, 
+                    new { @class = "btn-default", title = "Add new examples by parsing string" })
             </div>
         </div>
 
@@ -68,7 +71,7 @@
                                 <td>
                                     <div class="word-editor">
                                         @Html.ActionLink("Edit", "EditExample", new { id = example.Id }, new { title = "Edit Example" })
-                                        @Html.ActionLink("Delete", "DeleteExample", new { id = example.Id }, new { title = "Delete Example" })
+                                        <a href="javascript:void(0)" class="delete-button" title="Delete Example" data-example-id=@example.Id>Delete</a>
                                     </div>
                                 </td>
                             </tr>
@@ -85,4 +88,17 @@
 @section scripts
 {
     <script src="~/Scripts/Users/mainPage.js"></script>
+    <script>
+        $('.delete-button').click(function(e) {
+            var t = $(e.currentTarget);
+            var id = t.attr('data-example-id');
+            $.ajax({
+                type: "POST",
+                url: "/Admin/DeleteExample?id=" + id,
+                success: function(data) {
+                    t.parents('tr').remove();
+                }
+            });
+        })
+    </script>
 }

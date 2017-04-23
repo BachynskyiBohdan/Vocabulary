@@ -164,6 +164,7 @@
     <Compile Include="Models\Admin\GlobalListViewModel.cs" />
     <Compile Include="Models\Admin\GlossaryViewModel.cs" />
     <Compile Include="Models\Account\LoginViewModel.cs" />
+    <Compile Include="Models\Admin\ParseExamplesViewModel.cs" />
     <Compile Include="Models\Admin\ParsePhraseViewModel.cs" />
     <Compile Include="Models\Admin\PhraseViewModel.cs" />
     <Compile Include="Models\Account\RegistrationViewModel.cs" />
@@ -295,7 +296,7 @@
     <Content Include="Views\Admin\MainPage.cshtml" />
     <Content Include="Views\Admin\AddNewGlobalPhrase.cshtml" />
     <Content Include="Views\Admin\EditGlobalPhrase.cshtml" />
-    <Content Include="Views\Admin\AddNewGlobalPhraseByParse.cshtml" />
+    <Content Include="Views\Admin\AddWordsByParse.cshtml" />
     <Content Include="Views\Admin\TranslationMainPage.cshtml" />
     <Content Include="Views\Admin\AddTranslation.cshtml" />
     <Content Include="Views\Admin\EditTranslation.cshtml" />
@@ -312,13 +313,16 @@
     <Content Include="Views\Admin\GetExamplesNavigation.cshtml" />
     <Content Include="Views\Admin\GetTranslationsNavigation.cshtml" />
     <Content Include="Views\Admin\GetPhrasesNavigation.cshtml" />
-    <Content Include="Views\Admin\AddParsePhrasesToGlossary.cshtml" />
+    <Content Include="Views\Admin\AddWordsToGlossaryByParse.cshtml" />
     <Content Include="Views\Shared\PartialAdminHeader.cshtml" />
     <Content Include="Views\Glossary\Glossaries.cshtml" />
     <Content Include="Views\Glossary\Glossary.cshtml" />
     <Content Include="Views\Glossary\GlossariesData.cshtml" />
     <Content Include="Views\User\Vocabulary.cshtml" />
     <Content Include="Views\User\VocabularyData.cshtml" />
+    <Content Include="Views\Admin\AddPhrasesByParse.cshtml" />
+    <Content Include="Views\Admin\AddSentencesByParse.cshtml" />
+    <Content Include="Views\Admin\AddExamplesByParse.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

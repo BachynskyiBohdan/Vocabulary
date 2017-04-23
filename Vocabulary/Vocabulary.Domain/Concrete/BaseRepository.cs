@@ -18,7 +18,7 @@ namespace Vocabulary.Domain.Concrete
 
         public TEntity GetFirst<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : class
         {
-            return DataContext.Set<TEntity>().Where(predicate).FirstOrDefault();
+            return DataContext.Set<TEntity>().First(predicate);
         }
 
         public IQueryable<TEntity> GetAll<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : class

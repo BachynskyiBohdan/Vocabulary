@@ -7,7 +7,12 @@ namespace Vocabulary.Web.Models.Admin
     {
         public string PhraseLanguage { get; set; }
         public string TranslationLanguage { get; set; }
-        public IEnumerable<SelectListItem> Languages { get; set; }
-        public string WebAddresses { get; set; }
+        public IList<SelectListItem> Languages { get; set; }
+        public string ParseString { get; set; }
+
+        public ParsePhraseViewModel()
+        {
+            Languages = new List<SelectListItem>();
+        }
     }
 }

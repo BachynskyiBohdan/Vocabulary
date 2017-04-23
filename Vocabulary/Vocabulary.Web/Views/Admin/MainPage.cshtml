@@ -21,14 +21,16 @@
                 <div class="alert alert-danger">@TempData["Error"]</div>
             }
             
-            @Html.ActionLink("Glossaries", "GlossariesMainPage", null, new { @class = "left btn-primary", title = "Add new phrase" })
+            @Html.ActionLink("Glossaries", "GlossariesMainPage", null, new { @class = "left btn-primary", title = "Glossaries main page" })
 
             <span>Phrases Main Page</span>
             
             <div class="navigation-menu">
                 @Html.ActionLink("Add phrase", "AddNewGlobalPhrase", null, new {title = "Add new phrase"})
                 
-                @Html.ActionLink("Parse phrases", "AddNewGlobalPhraseByParse", null, new {title = "Add new phrases by parsing pages"})
+                @Html.ActionLink("Parse words", "AddWordsByParse", null, new {title = "Add new words by parsing web pages"})
+                @Html.ActionLink("Parse phases", "AddPhrasesByParse", null, new { title = "Add new phases by parsing text" })
+                @Html.ActionLink("Parse sentences", "AddSentencesByParse", null, new { title = "Add new sentences by parsing text" })
             </div>
         </div>
 
@@ -64,7 +66,7 @@
                                 <td>@phrase.LanguageId</td>
                                 <td>@Model.Languages[phrase.LanguageId]</td>
                                 <td>
-                                    <img src="~/Content/soundIcon.png" style="width: 25px; height: 25px;" onclick="PlayAudio(@phrase.Id.ToString())" />
+                                    <img src="~/Content/soundIcon.png" style="width: 25px; height: 25px;" onclick="playAudio(@phrase.Id.ToString())" />
                                     
                                     <audio id="@phrase.Id.ToString()">
                                         <source src="@Url.Action("GetPhraseAudio", new { id = phrase.Id })" />

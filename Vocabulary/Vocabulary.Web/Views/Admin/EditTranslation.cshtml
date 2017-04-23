@@ -22,7 +22,7 @@
                 @Html.HiddenFor(x => x.Id)
                 @Html.HiddenFor(x => x.LanguageId)
                 @Html.HiddenFor(x => x.GlobalPhraseId)
-                <div class="field-container ">
+                <div>
                     @Html.LabelFor(x => x.TranslationPhrase)
                     @Html.TextAreaFor(x => x.TranslationPhrase, new { placeholder = "Translation", @class = "form-control" })
                     @Html.ValidationMessageFor(x => x.TranslationPhrase)

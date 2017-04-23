@@ -5,7 +5,7 @@
     }, 2500);
 });
 
-function PlayAudio(str) {
+function playAudio(str) {
     $('audio#' + str).get(0).play();
 }
 

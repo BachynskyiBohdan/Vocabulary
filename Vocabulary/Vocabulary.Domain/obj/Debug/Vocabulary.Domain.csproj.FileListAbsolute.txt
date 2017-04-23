@@ -9,3 +9,4 @@ C:\Users\Bogdan\Documents\Visual Studio 2013\Projects\РАБОТА\ASP.NET\Vocab
 C:\Users\Bogdan\Documents\Visual Studio 2013\Projects\РАБОТА\ASP.NET\Vocabulary\Vocabulary.Domain\bin\Debug\ru\EntityFramework.SqlServer.resources.dll
 C:\Users\Bogdan\Documents\Visual Studio 2013\Projects\РАБОТА\ASP.NET\Vocabulary\Vocabulary.Domain\obj\Debug\Vocabulary.Domain.dll
 C:\Users\Bogdan\Documents\Visual Studio 2013\Projects\РАБОТА\ASP.NET\Vocabulary\Vocabulary.Domain\obj\Debug\Vocabulary.Domain.pdb
+C:\Users\Bogdan\Documents\Visual Studio 2013\Projects\РАБОТА\ASP.NET\Vocabulary\Vocabulary.Domain\obj\Debug\Vocabulary.Domain.csprojResolveAssemblyReference.cache

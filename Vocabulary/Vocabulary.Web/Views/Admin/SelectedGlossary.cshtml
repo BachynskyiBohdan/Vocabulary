@@ -30,7 +30,7 @@
                 @Html.ActionLink("Add Phrases", "AddPhrasesToGlossary", null,
                     new { title = "Add existing phrases to glossary" })
 
-                @Html.ActionLink("Parse phrases", "AddParsePhrasesToGlossary", null,
+                @Html.ActionLink("Parse phrases", "AddWordsToGlossaryByParse", null,
                     new { title = "Add new phrases by parsing pages to glossary" })
             </div>
         </div>
@@ -65,7 +65,7 @@
                                 <td>@phrase.LanguageId</td>
                                 <td>
                                     <img src="~/Content/soundIcon.png" style="width: 25px; height: 25px;" alt="Play"
-                                         onclick=" playAudio(@phrase.Id.ToString())" />
+                                         onclick="playAudio(@phrase.Id.ToString())" />
 
                                     <audio id="@phrase.Id.ToString()">
                                         <source src="@Url.Action("GetPhraseAudio", new { id = phrase.Id })" />
