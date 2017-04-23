@@ -7,16 +7,17 @@ namespace Vocabulary.Web.Models.Admin
 {
     public class GlossaryViewModel
     {
-         public Glossary Glossary { get; set; }
+        public Glossary Glossary { get; set; }
         [Display(Name = "Glossary language:")]
         [Required]
         public string SelectedLanguage { get; set; }
-        public IEnumerable<SelectListItem> Languages { get; set; }
+        public IList<SelectListItem> Languages { get; set; }
 
         public GlossaryViewModel()
         {
             Glossary = new Glossary();
-            SelectedLanguage = "eng";
+            SelectedLanguage = "";
+            Languages = new List<SelectListItem>();
         }
     }
 }

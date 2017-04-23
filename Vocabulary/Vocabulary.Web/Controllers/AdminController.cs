@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -15,6 +15,8 @@ using Vocabulary.Domain.Abstract;
 using Vocabulary.Domain.Entities;
 using Vocabulary.Web.Models.Admin;
 using WebGrease.Css.Extensions;
+
+#pragma warning disable 1998
 
 namespace Vocabulary.Web.Controllers
 {
@@ -70,9 +72,14 @@ namespace Vocabulary.Web.Controllers
 
         public ActionResult AddNewGlobalPhrase()
         {
-            var phraseModel = new PhraseViewModel { GlobalPhrase = new GlobalPhrase() };
-            phraseModel.Languages = _languageRepository.Languages
-                .Select(x => new SelectListItem() { Text = x.FullName, Value = x.Id.ToString() }).ToEnumerable();
+            var phraseModel = new PhraseViewModel
+            {
+                GlobalPhrase = new GlobalPhrase(),
+                Languages = _languageRepository.Languages
+                    .Select(
+                        x => new SelectListItem {Text = x.FullName, Value = x.Id.ToString(CultureInfo.InvariantCulture)})
+                    .ToEnumerable()
+            };
             return View(phraseModel);
         }
         [HttpPost, ValidateAntiForgeryToken]
@@ -100,7 +107,7 @@ namespace Vocabulary.Web.Controllers
             }
             
             phraseModel.Languages = _languageRepository.Languages
-                .Select(x => new SelectListItem() { Text = x.FullName, Value = x.Code }).ToEnumerable();
+                .Select(x => new SelectListItem { Text = x.FullName, Value = x.Code }).ToEnumerable();
             return View(phraseModel);
         }
 
@@ -119,11 +126,11 @@ namespace Vocabulary.Web.Controllers
                 .ContinueWith(t => RedirectToAction("MainPage")).Result;
         }
 
-        public ActionResult AddPhrasesByParse()
+        public ActionResult AddPhrasesByParse(decimal? glossaryId = null)
         {
             var model = new ParsePhraseViewModel();
             _languageRepository.Languages.ForEach(
-                l => model.Languages.Add(new SelectListItem() {Text = l.FullName, Value = l.Id.ToString()}));
+                l => model.Languages.Add(new SelectListItem {Text = l.FullName, Value = l.Id.ToString(CultureInfo.InvariantCulture)}));
             return View(model);
         }
         [HttpPost]
@@ -139,26 +146,42 @@ namespace Vocabulary.Web.Controllers
                 var wordsList = "";
                 var phLangId = decimal.Parse(model.PhraseLanguage);
                 var trLangId = decimal.Parse(model.TranslationLanguage);
+                Glossary glossary = null;
+                if (model.GlossaryId != null)
+                {
+                    glossary = _glossaryRepository.Get(g => g.Id == model.GlossaryId);
+                }
 
                 foreach (var line in lines)
                 {
-                    var mas = line.Split('—');
+                    var mas = line.Split(new[] { '—' }, 2);
                     if (mas.Length < 2) continue;
                     if (mas[0].Trim().Split(' ').Length == 1)
                     {
                         wordsList += mas[0] + "\n";
                         continue;
                     }
-                    _globalPhraseRepository.Add(new GlobalPhrase()
+                    var pTemp = new GlobalPhrase
                     {
                         Audio = GenerateAudio(mas[0]),
                         Phrase = mas[0],
                         PhraseType = PhraseType.Phrase,
-                        LanguageId = phLangId
-                    });
+                        LanguageId = phLangId,
+
+
+                    };
+                    if (glossary != null)
+                    {
+                        glossary.GlobalPhrases.Add(pTemp);
+                        _glossaryRepository.Update(glossary);
+                    }
+                    else
+                    {
+                        _globalPhraseRepository.Add(pTemp);
+                    }
                     var text = mas[0];
                     var phrase = _globalPhraseRepository.Get(p => p.Phrase == text);
-                    _globalTranslationRepository.Add(new GlobalTranslation()
+                    _globalTranslationRepository.Add(new GlobalTranslation
                     {
                         GlobalPhraseId = phrase.Id,
                         LanguageId = trLangId,
@@ -170,52 +193,78 @@ namespace Vocabulary.Web.Controllers
                     await AddWordsByParse(wordsList);
                 }
                 TempData["Success"] = string.Format("Phrases was successfully added by parsing.");
-            }).ContinueWith(t => RedirectToAction("MainPage")).Result;
+            }).ContinueWith(t =>
+            {
+                if (model.GlossaryId == null)
+                    return RedirectToAction("MainPage");
+                return RedirectToAction("SelectedGlossary", new { id = model.GlossaryId });
+            }).Result;
         }
 
         public ActionResult AddSentencesByParse()
         {
             var model = new ParsePhraseViewModel();
             _languageRepository.Languages.ForEach(
-                l => model.Languages.Add(new SelectListItem() { Text = l.FullName, Value = l.Id.ToString() }));
+                l => model.Languages.Add(new SelectListItem { Text = l.FullName, Value = l.Id.ToString(CultureInfo.InvariantCulture) }));
             return View(model);
         }
         [HttpPost]
-        public ActionResult AddSentencesByParse(ParsePhraseViewModel model)
+        public async Task<ActionResult> AddSentencesByParse(ParsePhraseViewModel model)
         {
             if (string.IsNullOrEmpty(model.ParseString))
             {
                 TempData["Error"] = string.Format("Posted parsing string is empty.");
             }
-
-            var lines = model.ParseString.Split('\n');
-            var phLangId = decimal.Parse(model.PhraseLanguage);
-            var trLangId = decimal.Parse(model.TranslationLanguage);
-
-            foreach (var line in lines)
+            return Task.Factory.StartNew(() =>
             {
-                var mas = line.Split('—');
-                if (mas.Length < 2) continue;
-
-                _globalPhraseRepository.Add(new GlobalPhrase()
+                var lines = model.ParseString.Split('\n');
+                var phLangId = decimal.Parse(model.PhraseLanguage);
+                var trLangId = decimal.Parse(model.TranslationLanguage);
+                Glossary glossary = null;
+                if (model.GlossaryId != null)
                 {
-                    Audio = GenerateAudio(mas[0]),
-                    Phrase = mas[0],
-                    PhraseType = PhraseType.Phrase,
-                    LanguageId = phLangId
-                });
+                    glossary = _glossaryRepository.Get(g => g.Id == model.GlossaryId);
+                }
 
-                var text = mas[0];
-                var phrase = _globalPhraseRepository.Get(p => p.Phrase == text);
-                _globalTranslationRepository.Add(new GlobalTranslation()
+                foreach (var line in lines)
                 {
-                    GlobalPhraseId = phrase.Id,
-                    LanguageId = trLangId,
-                    TranslationPhrase = mas[1]
-                });
-            }
-            TempData["Success"] = string.Format("Phrases was successfully added by parsing.");
-            return RedirectToAction("MainPage");
+                    var mas = line.Split(new[] {'—'}, 2);
+                    if (mas.Length < 2) continue;
+
+                    var pTemp = new GlobalPhrase
+                    {
+                        Audio = GenerateAudio(mas[0]),
+                        Phrase = mas[0],
+                        PhraseType = PhraseType.Phrase,
+                        LanguageId = phLangId
+                    };
+                    if (glossary != null)
+                    {
+                        glossary.GlobalPhrases.Add(pTemp);
+                        _glossaryRepository.Update(glossary);
+                    }
+                    else
+                    {
+                         _globalPhraseRepository.Add(pTemp);
+                    }
+
+                    var text = mas[0];
+                    var phrase = _globalPhraseRepository.Get(p => p.Phrase == text);
+                    _globalTranslationRepository.Add(new GlobalTranslation
+                    {
+                        GlobalPhraseId = phrase.Id,
+                        LanguageId = trLangId,
+                        TranslationPhrase = mas[1]
+                    });
+                }
+                TempData["Success"] = string.Format("Phrases was successfully added by parsing.");
+
+            }).ContinueWith(t =>
+            {
+                if(model.GlossaryId == null)
+                    return RedirectToAction("MainPage");
+                return RedirectToAction("SelectedGlossary", new { id = model.GlossaryId });
+            }).Result;
         }
 
         public ActionResult EditGlobalPhrase(decimal id)
@@ -226,12 +275,12 @@ namespace Vocabulary.Web.Controllers
                 TempData["Error"] = string.Format("Phrase with Id = {0} not found.", id);
                 return RedirectToAction("MainPage");
             }
-            var phraseModel = new PhraseViewModel() { GlobalPhrase = globalPhrase };
+            var phraseModel = new PhraseViewModel { GlobalPhrase = globalPhrase };
 
             var lang = _languageRepository.Languages.FirstOrDefault(l => l.Id == globalPhrase.LanguageId);
             phraseModel.Languages = _languageRepository.Languages
-                .Select(x => new SelectListItem() { Text = x.FullName, Value = x.Id.ToString() }).ToEnumerable();
-            phraseModel.Languages.FirstOrDefault(x => x.Value == lang.Id.ToString()).Selected = true;
+                .Select(x => new SelectListItem { Text = x.FullName, Value = x.Id.ToString(CultureInfo.InvariantCulture) }).ToEnumerable();
+            phraseModel.Languages.FirstOrDefault(x => x.Value == lang.Id.ToString(CultureInfo.InvariantCulture)).Selected = true;
 
             return View(phraseModel);
         }
@@ -242,7 +291,6 @@ namespace Vocabulary.Web.Controllers
             {
                 phraseModel.GlobalPhrase.PhraseType = GlobalPhrase.ParseType(phraseModel.SelectedPhraseType);
                 phraseModel.GlobalPhrase.LanguageId = decimal.Parse(phraseModel.SelectedLanguage);
-                var p = phraseModel.GlobalPhrase.Transcription;
                 return Task.Factory.StartNew(() =>
                 {
                     if (audio != null)
@@ -262,7 +310,7 @@ namespace Vocabulary.Web.Controllers
             }
 
             phraseModel.Languages = _languageRepository.Languages
-                .Select(x => new SelectListItem() { Text = x.FullName, Value = x.Code }).ToEnumerable();
+                .Select(x => new SelectListItem { Text = x.FullName, Value = x.Code }).ToEnumerable();
             return View(phraseModel);
         }
 
@@ -298,12 +346,14 @@ namespace Vocabulary.Web.Controllers
             Session["GlobalPhraseId"] = phrase.Id;
             Session["ElementsPerPage"] = count;
 
-            var list = new GlobalListViewModel();
-            list.GlobalTranslations = _globalTranslationRepository.GlobalTranslations
-                .Where(t => t.GlobalPhraseId == phraseId)
-                .OrderBy(t => t.Id)
-                .Skip(count * (page - 1))
-                .Take(count).ToList(); 
+            var list = new GlobalListViewModel
+            {
+                GlobalTranslations = _globalTranslationRepository.GlobalTranslations
+                    .Where(t => t.GlobalPhraseId == phraseId)
+                    .OrderBy(t => t.Id)
+                    .Skip(count*(page - 1))
+                    .Take(count).ToList()
+            };
 
             var lang = _languageRepository.GetAll();
             foreach (var language in lang)
@@ -315,21 +365,13 @@ namespace Vocabulary.Web.Controllers
 
         public ActionResult AddTranslation(decimal phraseId)
         {
-            var model = new TranslationViewModel();
-            //var phrase = _globalPhraseRepository.Get(p => p.Id == phraseId);
-            //using (var context = new EFDbContext())
-            //{
-            //    var trans = context.GlobalTranslations.Where(t => t.GlobalPhraseId == phraseId).ToList();
-            //    var lang = trans.Select(l => new Language() {Id = l.LanguageId}).ToList();
-            //    lang.Add(new Language() {Id = phrase.LanguageId});
-            //    var p = context.Languages.Where(l => lang.Contains(new Language(){Id = l.Id}));
-
-            //    model.Languages = p.Select(x => new SelectListItem() {Text = x.FullName, Value = x.Code}).ToEnumerable();
-            //    model.Languages.Count();
-            //}
-
-            model.Languages = _languageRepository.Languages.Select(x => new SelectListItem() { Text = x.FullName, Value = x.Id.ToString() }).ToEnumerable();
-            model.GlobalTranslation.GlobalPhraseId = phraseId;
+            var model = new TranslationViewModel
+            {
+                Languages =
+                    _languageRepository.Languages.Select(
+                        x => new SelectListItem {Text = x.FullName, Value = x.Id.ToString(CultureInfo.InvariantCulture)}).ToEnumerable(),
+                GlobalTranslation = {GlobalPhraseId = phraseId}
+            };
 
             return View(model);
         }
@@ -339,8 +381,8 @@ namespace Vocabulary.Web.Controllers
             var phrase = _globalPhraseRepository.Get(p => p.Id == model.GlobalTranslation.GlobalPhraseId);
             var trans = _globalTranslationRepository.GetAll(t => t.GlobalPhraseId == model.GlobalTranslation.GlobalPhraseId).ToList();
 
-            var lang = trans.Select(l => new Language() {Id = l.LanguageId}).ToList();            
-            lang.Add(new Language() {Id = phrase.LanguageId});
+            var lang = trans.Select(l => new Language {Id = l.LanguageId}).ToList();            
+            lang.Add(new Language {Id = phrase.LanguageId});
 
             model.GlobalTranslation.LanguageId = decimal.Parse(model.SelectedLanguage);
 
@@ -356,16 +398,16 @@ namespace Vocabulary.Web.Controllers
                 return RedirectToAction("TranslationMainPage", new { phraseId = Session["GlobalPhraseId"] });
             }
 
-            model.Languages = _languageRepository.Languages.Select(x => new SelectListItem() { Text = x.FullName, Value = x.Code }).ToEnumerable();
+            model.Languages = _languageRepository.Languages.Select(x => new SelectListItem { Text = x.FullName, Value = x.Code }).ToEnumerable();
             return View(model);
         }
 
-        public ActionResult EditTranslation(decimal Id)
+        public ActionResult EditTranslation(decimal id)
         {
-            var translation = _globalTranslationRepository.Get(t => t.Id == Id);
+            var translation = _globalTranslationRepository.Get(t => t.Id == id);
             if (translation == null)
             {
-                TempData["Error"] = string.Format("Translation with id = {0} not found", translation.Id);
+                TempData["Error"] = string.Format("Translation with id = {0} not found", id);
                 return RedirectToAction("TranslationMainPage", new { phraseId = Session["GlobalPhraseId"] });
             }
             return View(translation);
@@ -388,7 +430,7 @@ namespace Vocabulary.Web.Controllers
             var tr = _globalTranslationRepository.Get(t => t.Id == id);
             if (tr == null)
             {
-                TempData["Error"] = string.Format("Translation with id = {0} not found", tr.Id);
+                TempData["Error"] = string.Format("Translation with id = {0} not found", id);
                 return RedirectToAction("TranslationMainPage", new { phraseId = Session["GlobalPhraseId"] });
             }
             if (_globalTranslationRepository.Delete(tr))
@@ -414,12 +456,14 @@ namespace Vocabulary.Web.Controllers
             Session["GlobalPhraseId"] = phrase.Id;
             Session["ElementsPerPage"] = count;
 
-            var list = new GlobalListViewModel();
-            list.GlobalExamples = _globalExampleRepository.GlobalExamples
-                .Where(t => t.GlobalPhraseId == phraseId)
-                .OrderBy(e => e.Id)
-                .Skip(count * (page - 1))
-                .Take(count).ToList();
+            var list = new GlobalListViewModel
+            {
+                GlobalExamples = _globalExampleRepository.GlobalExamples
+                    .Where(t => t.GlobalPhraseId == phraseId)
+                    .OrderBy(e => e.Id)
+                    .Skip(count*(page - 1))
+                    .Take(count).ToList()
+            };
 
             var lang = _languageRepository.GetAll();
             foreach (var language in lang)
@@ -431,11 +475,20 @@ namespace Vocabulary.Web.Controllers
 
         public ActionResult AddExample(decimal phraseId)
         {
-            var model = new ExampleViewModel() {GlobalExample = new GlobalExample()};
-            
-            model.Translations = _globalTranslationRepository.GlobalTranslations
-                .Where(t => t.GlobalPhraseId == phraseId)
-                .Select(x => new SelectListItem() { Text = x.TranslationPhrase, Value = x.Id.ToString() }).ToEnumerable();
+            var model = new ExampleViewModel
+            {
+                GlobalExample = new GlobalExample(),
+                Translations = _globalTranslationRepository.GlobalTranslations
+                    .Where(t => t.GlobalPhraseId == phraseId)
+                    .Select(
+                        x =>
+                            new SelectListItem
+                            {
+                                Text = x.TranslationPhrase,
+                                Value = x.Id.ToString(CultureInfo.InvariantCulture)
+                            }).ToEnumerable()
+            };
+
             model.GlobalExample.GlobalPhraseId = phraseId;
 
             return View(model);
@@ -447,8 +500,7 @@ namespace Vocabulary.Web.Controllers
             {
                 var id = decimal.Parse(example.SelectedTranslation);
                 example.GlobalExample.GlobalTranslationId = id;
-                var translations =
-                    _globalTranslationRepository.GetAll(t => t.GlobalPhraseId == example.GlobalExample.GlobalPhraseId).Where(t => t.Id == id);
+
                 return Task.Factory.StartNew(() =>
                 {
                     if (audio != null)
@@ -475,7 +527,7 @@ namespace Vocabulary.Web.Controllers
             _globalTranslationRepository.GlobalTranslations
                 .Where(t => t.GlobalPhraseId == phraseId)
                 .ForEach(
-                t => model.Translations.Add(new SelectListItem() { Text = t.TranslationPhrase, Value = t.Id.ToString() }));
+                t => model.Translations.Add(new SelectListItem { Text = t.TranslationPhrase, Value = t.Id.ToString(CultureInfo.InvariantCulture) }));
             model.PhraseId = phraseId;
             return View(model);
         }
@@ -496,7 +548,7 @@ namespace Vocabulary.Web.Controllers
                     var mas = line.Split('—');
                     if (mas.Length < 2) continue;
 
-                    _globalExampleRepository.Add(new GlobalExample()
+                    _globalExampleRepository.Add(new GlobalExample
                     {
                         Audio = GenerateAudio(mas[0]),
                         Phrase = mas[0],
@@ -576,13 +628,15 @@ namespace Vocabulary.Web.Controllers
 
         public ActionResult GlossariesMainPage(int count = 20, int page = 1)
         {
-            var gl = new GlobalListViewModel();
-            gl.Glossaries = _glossaryRepository.Glossaries
-                .OrderBy(e => e.Id)
-                .Skip(count * (page - 1))
-                .Take(count).ToList();
+            var gl = new GlobalListViewModel
+            {
+                Glossaries = _glossaryRepository.Glossaries
+                    .OrderBy(e => e.Id)
+                    .Skip(count*(page - 1))
+                    .Take(count).ToList(),
+                Languages = new Dictionary<decimal, string>()
+            };
 
-            gl.Languages = new Dictionary<decimal, string>();
             var l = _languageRepository.GetAll();
             foreach (var language in l)
             {
@@ -678,18 +732,20 @@ namespace Vocabulary.Web.Controllers
         }
 
 
+
         public ActionResult AddGlossary()
         {
-            var glossary = new GlossaryViewModel();
+            var model = new GlossaryViewModel();
 
-            glossary.Languages =
-                _languageRepository.Languages.Select(
-                    l => new SelectListItem() {Text = l.FullName, Value = l.Id.ToString()});
+            _languageRepository.Languages.ForEach(
+                    l => model.Languages.Add(new SelectListItem {Text = l.FullName, Value = l.Id.ToString(CultureInfo.InvariantCulture)}));
 
-            return View(glossary);
+            model.Languages.First().Selected = true;
+
+            return View(model);
         }
         [HttpPost]
-        public ActionResult AddGlossary(GlossaryViewModel glossary, HttpPostedFileBase image)
+        public ActionResult AddGlossary(GlossaryViewModel model, HttpPostedFileBase image)
         {
             if (image == null)
             {
@@ -697,18 +753,22 @@ namespace Vocabulary.Web.Controllers
             }
             if (ModelState.IsValid)
             {
-                glossary.Glossary.LanguageId = decimal.Parse(glossary.SelectedLanguage);
+                model.Glossary.LanguageId = decimal.Parse(model.SelectedLanguage);
 
-                glossary.Glossary.Icon = new byte[image.ContentLength];
-                image.InputStream.Read(glossary.Glossary.Icon, 0, image.ContentLength);
+                model.Glossary.Icon = new byte[image.ContentLength];
+                image.InputStream.Read(model.Glossary.Icon, 0, image.ContentLength);
 
-                _glossaryRepository.Add(glossary.Glossary);
-                TempData["Success"] = string.Format("Glossary with Id = {0} was succesfully added", glossary.Glossary.Id);
+                _glossaryRepository.Add(model.Glossary);
+                TempData["Success"] = string.Format("Glossary with Id = {0} was succesfully added", model.Glossary.Id);
 
                 return RedirectToAction("GlossariesMainPage");
             }
+            model.Languages = new List<SelectListItem>();
+            _languageRepository.Languages.ForEach(
+                l => model.Languages.Add(new SelectListItem { Text = l.FullName, Value = l.Id.ToString(CultureInfo.InvariantCulture) }));
 
-            return View(glossary);
+
+            return View(model);
         }
 
         public ActionResult EditGlossary(decimal id)
@@ -759,6 +819,24 @@ namespace Vocabulary.Web.Controllers
             return RedirectToAction("GlossariesMainPage");
         }
 
+        public ActionResult DeleteGlobalPhraseFromGlossary(decimal id, decimal glosId)
+        {
+            using (var ctx = new EFDbContext())
+            {
+                var globalPhrase = ctx.GlobalPhrases.FirstOrDefault(p => p.Id == id);
+                if (globalPhrase == null)
+                {
+                    TempData["Error"] = string.Format("Phrase with Id = {0} not found.", id);
+                    return RedirectToAction("SelectedGlossary", new {id = glosId});
+                }
+                var glossary = ctx.Glossaries.FirstOrDefault(g => g.Id == glosId);
+                globalPhrase.Glossaries.Remove(glossary);
+                ctx.SaveChanges();
+                TempData["Success"] = string.Format("Phrase with Id = {0} was successfully deleted.", id);
+            }
+            return RedirectToAction("SelectedGlossary", new { id = glosId });
+        }
+
 
         #endregion Add|Edit|Delete Glossaries
 
@@ -806,21 +884,26 @@ namespace Vocabulary.Web.Controllers
         {
             var html = new HtmlDocument();
             var addresses = websites.Split('\n');
-            var lang = _languageRepository.Languages.ToList();
             foreach (var address in addresses)
             {
-                if (string.IsNullOrEmpty(address)) continue;
-                using (var client = new WebClient())
+                try
                 {
-                    var response = client.OpenRead(string.Format("http://www.wooordhunt.ru/word/{0}", address));
-                    var reader = new StreamReader(response);
-                    var source = reader.ReadToEnd();
-                    html.LoadHtml(source);
-                }
-                var document = html.DocumentNode;
+                    if (string.IsNullOrEmpty(address)) continue;
+                    using (var client = new WebClient())
+                    {
+                        var response = client.OpenRead(string.Format("http://www.wooordhunt.ru/word/{0}", address));
+                        var reader = new StreamReader(response);
+                        var source = reader.ReadToEnd();
+                        html.LoadHtml(source);
+                    }
+                    var document = html.DocumentNode;
 
-                var fullPhrase = await GetFullPhrase(document);
-                AddToDataBase(fullPhrase, glossary);
+                    var fullPhrase = await GetFullPhrase(document);
+                    AddToDataBase(fullPhrase, glossary);
+                }
+                catch
+                {
+                }
             }
         }
         /// <summary>

@@ -22,6 +22,7 @@
                     @Html.ValidationMessageFor(x => x.SelectedTranslation)
                 </div>
                 <div>
+                    @Html.LabelFor(x => x.ParseString);
                     @Html.TextAreaFor(x => x.ParseString,
                         new { placeholder = "example template: {phrase} — {translation} \n", @class = "form-control" })
                     @Html.ValidationMessageFor(x => x.ParseString)

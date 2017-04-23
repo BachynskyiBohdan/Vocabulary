@@ -18,6 +18,7 @@
             @using (Html.BeginForm("AddExample", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
             {
                 @Html.AntiForgeryToken()
+                @Html.ValidationSummary()
 
                 @Html.HiddenFor(x => x.GlobalExample.GlobalPhraseId)
                 <div class="field-container ">

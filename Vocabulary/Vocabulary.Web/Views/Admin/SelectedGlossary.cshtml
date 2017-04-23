@@ -14,11 +14,11 @@
         <div class="main-header">
             @if (TempData.ContainsKey("Success"))
             {
-                <div class="label label-success">@TempData["Success"]</div>
+                <div class="alert alert-success">@TempData["Success"]</div>
             }
-            @if (TempData.ContainsKey("Success"))
+            @if (TempData.ContainsKey("Error"))
             {
-                <div class="label label-success">@TempData["Success"]</div>
+                <div class="alert alert-danger">@TempData["Error"]</div>
             }
             
             <span>Glossary: @Model.Name</span>
@@ -30,57 +30,63 @@
                 @Html.ActionLink("Add Phrases", "AddPhrasesToGlossary", null,
                     new { title = "Add existing phrases to glossary" })
 
-                @Html.ActionLink("Parse phrases", "AddWordsToGlossaryByParse", null,
+                @Html.ActionLink("Parse words", "AddWordsToGlossaryByParse", null,
+                    new { title = "Add new words by parsing pages to glossary" })
+                
+                @Html.ActionLink("Parse phrases", "AddPhrasesByParse", new {glossaryId = Model.Id},
                     new { title = "Add new phrases by parsing pages to glossary" })
+                
+                @Html.ActionLink("Parse sentenses", "AddSentencesByParse", new { glossaryId = Model.Id },
+                    new { title = "Add new sentenses by parsing pages to glossary" })
+
             </div>
         </div>
 
-        <div class="layout-collumn layout-collumn-menu">
+        <div class="layout-collumn container-fluid">
+            <table class="table table-hover">
+                <thead>
+                    <tr onclick="sortTable">
+                        <th>ID</th>
+                        <th>Phrase</th>
+                        <th>PhraseType</th>
+                        <th>Transcription</th>
+                        <th>Frequency</th>
+                        <th>LanguageID</th>
+                        <th>Audio</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var phrase in Model.GlobalPhrases)
+                    {
+                        <tr>
+                            <td>@phrase.Id</td>
+                            <td>@phrase.Phrase</td>
+                            <td>@phrase.PhraseType</td>
+                            <td>@phrase.Transcription</td>
+                            <td>@phrase.Frequency</td>
+                            <td>@phrase.LanguageId</td>
+                            <td>
+                                <img src="~/Content/soundIcon.png" style="width: 25px; height: 25px;" alt="Play"
+                                     onclick="playAudio(@phrase.Id.ToString())" />
 
-        </div>
-
-        <div class="layout-collumn layout-collumn-main container-fluid">
-            <div class="words-container">
-                <table class="table table-hover">
-                    <thead>
-                        <tr onclick="sortTable">
-                            <th>ID</th>
-                            <th>Phrase</th>
-                            <th>PhraseType</th>
-                            <th>Transcription</th>
-                            <th>Frequency</th>
-                            <th>LanguageID</th>
-                            <th>Audio</th>
+                                <audio id="@phrase.Id.ToString()">
+                                    <source src="@Url.Action("GetPhraseAudio", new { id = phrase.Id })" />
+                                </audio>
+                            </td>
+                            <td>
+                                @Html.ActionLink("Edit", "EditGlobalPhrase", new { id = phrase.Id }, new { title = "Edit Phrase" })
+                                @Html.ActionLink("Translations", "TranslationMainPage", new { phraseId = phrase.Id }, new { title = "Translations  Main Page" })
+                                @Html.ActionLink("Examples", "ExampleMainPage", new { phraseId = phrase.Id }, new { title = "Examples Main Page" })
+                                @Html.ActionLink("Delete", "DeleteGlobalPhraseFromGlossary", new { id = phrase.Id, glosId = Model.Id }, new { title = "Delete Phrase from Glossary" })
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var phrase in Model.GlobalPhrases)
-                        {
-                            <tr>
-                                <td>@phrase.Id</td>
-                                <td>@phrase.Phrase</td>
-                                <td>@phrase.PhraseType</td>
-                                <td>@phrase.Transcription</td>
-                                <td>@phrase.Frequency</td>
-                                <td>@phrase.LanguageId</td>
-                                <td>
-                                    <img src="~/Content/soundIcon.png" style="width: 25px; height: 25px;" alt="Play"
-                                         onclick="playAudio(@phrase.Id.ToString())" />
-
-                                    <audio id="@phrase.Id.ToString()">
-                                        <source src="@Url.Action("GetPhraseAudio", new { id = phrase.Id })" />
-                                    </audio>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
+                    }
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
-
-
 @section scripts
 {
     <script>

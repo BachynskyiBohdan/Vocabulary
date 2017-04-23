@@ -15,9 +15,10 @@
             <h1>Добавление нового глоссария</h1>
         </div>
         <div class="form-container">
-            @using (Html.BeginForm("EditGlossary", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            @using (Html.BeginForm("AddGlossary", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
             {
                 @Html.AntiForgeryToken()
+                @Html.ValidationSummary()
 
                 <div class="field-container ">
                     @Html.TextBoxFor(x => x.Glossary.Name, new { placeholder = "Name", @class = "form-control" })

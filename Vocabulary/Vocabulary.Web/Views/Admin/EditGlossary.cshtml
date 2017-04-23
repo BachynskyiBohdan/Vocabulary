@@ -18,6 +18,7 @@
             @using (Html.BeginForm("EditGlossary", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
             {
                 @Html.AntiForgeryToken()
+                @Html.ValidationSummary()
 
                 @Html.HiddenFor(x => x.Id)
                 @Html.HiddenFor(x => x.LanguageId)

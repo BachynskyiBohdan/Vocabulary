@@ -4,6 +4,9 @@ C:\Users\Bogdan\Documents\Visual Studio 2013\Projects\РАБОТА\ASP.NET\Vocab
 C:\Users\Bogdan\Documents\Visual Studio 2013\Projects\РАБОТА\ASP.NET\Vocabulary\Vocabulary.Web\bin\Antlr3.Runtime.dll
 C:\Users\Bogdan\Documents\Visual Studio 2013\Projects\РАБОТА\ASP.NET\Vocabulary\Vocabulary.Web\bin\EntityFramework.dll
 C:\Users\Bogdan\Documents\Visual Studio 2013\Projects\РАБОТА\ASP.NET\Vocabulary\Vocabulary.Web\bin\EntityFramework.SqlServer.dll
+C:\Users\Bogdan\Documents\Visual Studio 2013\Projects\РАБОТА\ASP.NET\Vocabulary\Vocabulary.Web\bin\Fizzler.dll
+C:\Users\Bogdan\Documents\Visual Studio 2013\Projects\РАБОТА\ASP.NET\Vocabulary\Vocabulary.Web\bin\Fizzler.Systems.HtmlAgilityPack.dll
+C:\Users\Bogdan\Documents\Visual Studio 2013\Projects\РАБОТА\ASP.NET\Vocabulary\Vocabulary.Web\bin\HtmlAgilityPack.dll
 C:\Users\Bogdan\Documents\Visual Studio 2013\Projects\РАБОТА\ASP.NET\Vocabulary\Vocabulary.Web\bin\Microsoft.Web.Infrastructure.dll
 C:\Users\Bogdan\Documents\Visual Studio 2013\Projects\РАБОТА\ASP.NET\Vocabulary\Vocabulary.Web\bin\Microsoft.Web.Mvc.FixedDisplayModes.dll
 C:\Users\Bogdan\Documents\Visual Studio 2013\Projects\РАБОТА\ASP.NET\Vocabulary\Vocabulary.Web\bin\Newtonsoft.Json.dll
@@ -20,8 +23,12 @@ C:\Users\Bogdan\Documents\Visual Studio 2013\Projects\РАБОТА\ASP.NET\Vocab
 C:\Users\Bogdan\Documents\Visual Studio 2013\Projects\РАБОТА\ASP.NET\Vocabulary\Vocabulary.Web\bin\Vocabulary.Domain.pdb
 C:\Users\Bogdan\Documents\Visual Studio 2013\Projects\РАБОТА\ASP.NET\Vocabulary\Vocabulary.Web\bin\EntityFramework.xml
 C:\Users\Bogdan\Documents\Visual Studio 2013\Projects\РАБОТА\ASP.NET\Vocabulary\Vocabulary.Web\bin\EntityFramework.SqlServer.xml
-C:\Users\Bogdan\Documents\Visual Studio 2013\Projects\РАБОТА\ASP.NET\Vocabulary\Vocabulary.Web\bin\Ninject.xml
+C:\Users\Bogdan\Documents\Visual Studio 2013\Projects\РАБОТА\ASP.NET\Vocabulary\Vocabulary.Web\bin\Fizzler.xml
+C:\Users\Bogdan\Documents\Visual Studio 2013\Projects\РАБОТА\ASP.NET\Vocabulary\Vocabulary.Web\bin\Fizzler.Systems.HtmlAgilityPack.xml
+C:\Users\Bogdan\Documents\Visual Studio 2013\Projects\РАБОТА\ASP.NET\Vocabulary\Vocabulary.Web\bin\HtmlAgilityPack.pdb
+C:\Users\Bogdan\Documents\Visual Studio 2013\Projects\РАБОТА\ASP.NET\Vocabulary\Vocabulary.Web\bin\HtmlAgilityPack.xml
 C:\Users\Bogdan\Documents\Visual Studio 2013\Projects\РАБОТА\ASP.NET\Vocabulary\Vocabulary.Web\bin\Newtonsoft.Json.xml
+C:\Users\Bogdan\Documents\Visual Studio 2013\Projects\РАБОТА\ASP.NET\Vocabulary\Vocabulary.Web\bin\Ninject.xml
 C:\Users\Bogdan\Documents\Visual Studio 2013\Projects\РАБОТА\ASP.NET\Vocabulary\Vocabulary.Web\bin\System.Web.Mvc.xml
 C:\Users\Bogdan\Documents\Visual Studio 2013\Projects\РАБОТА\ASP.NET\Vocabulary\Vocabulary.Web\bin\System.Web.Razor.xml
 C:\Users\Bogdan\Documents\Visual Studio 2013\Projects\РАБОТА\ASP.NET\Vocabulary\Vocabulary.Web\bin\System.Web.WebPages.xml
@@ -39,10 +46,3 @@ C:\Users\Bogdan\Documents\Visual Studio 2013\Projects\РАБОТА\ASP.NET\Vocab
 C:\Users\Bogdan\Documents\Visual Studio 2013\Projects\РАБОТА\ASP.NET\Vocabulary\Vocabulary.Web\obj\Debug\Vocabulary.Web.csprojResolveAssemblyReference.cache
 C:\Users\Bogdan\Documents\Visual Studio 2013\Projects\РАБОТА\ASP.NET\Vocabulary\Vocabulary.Web\obj\Debug\Vocabulary.Web.dll
 C:\Users\Bogdan\Documents\Visual Studio 2013\Projects\РАБОТА\ASP.NET\Vocabulary\Vocabulary.Web\obj\Debug\Vocabulary.Web.pdb
-C:\Users\Bogdan\Documents\Visual Studio 2013\Projects\РАБОТА\ASP.NET\Vocabulary\Vocabulary.Web\bin\Fizzler.dll
-C:\Users\Bogdan\Documents\Visual Studio 2013\Projects\РАБОТА\ASP.NET\Vocabulary\Vocabulary.Web\bin\Fizzler.Systems.HtmlAgilityPack.dll
-C:\Users\Bogdan\Documents\Visual Studio 2013\Projects\РАБОТА\ASP.NET\Vocabulary\Vocabulary.Web\bin\HtmlAgilityPack.dll
-C:\Users\Bogdan\Documents\Visual Studio 2013\Projects\РАБОТА\ASP.NET\Vocabulary\Vocabulary.Web\bin\Fizzler.xml
-C:\Users\Bogdan\Documents\Visual Studio 2013\Projects\РАБОТА\ASP.NET\Vocabulary\Vocabulary.Web\bin\Fizzler.Systems.HtmlAgilityPack.xml
-C:\Users\Bogdan\Documents\Visual Studio 2013\Projects\РАБОТА\ASP.NET\Vocabulary\Vocabulary.Web\bin\HtmlAgilityPack.pdb
-C:\Users\Bogdan\Documents\Visual Studio 2013\Projects\РАБОТА\ASP.NET\Vocabulary\Vocabulary.Web\bin\HtmlAgilityPack.xml

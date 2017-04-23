@@ -34,53 +34,47 @@
             </div>
         </div>
 
-        <div class="layout-collumn layout-collumn-menu">
-
-        </div>
-
-        <div class="layout-collumn layout-collumn-main container-fluid">
-            <div class="words-container">
-                <table class="table table-hover">
-                    <thead>
+        <div class="layout-collumn container-fluid">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>GlobalPhraseID</th>
+                        <th>Phrase</th>
+                        <th>GlobalTranslationID</th>
+                        <th>Translation</th>
+                        <th>Audio</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var example in Model.GlobalExamples)
+                    {
                         <tr>
-                            <th>ID</th>
-                            <th>GlobalPhraseID</th>
-                            <th>Phrase</th>
-                            <th>GlobalTranslationID</th>
-                            <th>Translation</th>
-                            <th>Audio</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var example in Model.GlobalExamples)
-                        {
-                            <tr>
-                                <td>@example.Id</td>
-                                <td>@example.GlobalPhraseId</td>
-                                <td style="text-align: left">@example.Phrase</td>
-                                <td>@example.GlobalTranslationId</td>
-                                <td style="text-align: left">@example.Translation</td>
-                                <td>
-                                    <img src="~/Content/soundIcon.png" style="width: 25px; height: 25px;" onclick="playAudio(@example.Id.ToString())" />
+                            <td>@example.Id</td>
+                            <td>@example.GlobalPhraseId</td>
+                            <td style="text-align: left">@example.Phrase</td>
+                            <td>@example.GlobalTranslationId</td>
+                            <td style="text-align: left">@example.Translation</td>
+                            <td>
+                                <img src="~/Content/soundIcon.png" style="width: 25px; height: 25px;" onclick="playAudio(@example.Id.ToString())" />
 
-                                    <audio id="@example.Id.ToString()">
-                                        <source src="@Url.Action("GetExampleAudio", new {id = example.Id})"/>
-                                    </audio>
-                                </td>
-                                <td>
-                                    <div class="word-editor">
-                                        @Html.ActionLink("Edit", "EditExample", new { id = example.Id }, new { title = "Edit Example" })
-                                        <a href="javascript:void(0)" class="delete-button" title="Delete Example" data-example-id=@example.Id>Delete</a>
-                                    </div>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-            @Html.Action("GetExamplesNavigation")
+                                <audio id="@example.Id.ToString()">
+                                    <source src="@Url.Action("GetExampleAudio", new {id = example.Id})"/>
+                                </audio>
+                            </td>
+                            <td>
+                                <div class="word-editor">
+                                    @Html.ActionLink("Edit", "EditExample", new { id = example.Id }, new { title = "Edit Example" })
+                                    <a href="javascript:void(0)" class="delete-button" title="Delete Example" data-example-id=@example.Id>Delete</a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
+        @Html.Action("GetExamplesNavigation")
     </div>
 </div>
 

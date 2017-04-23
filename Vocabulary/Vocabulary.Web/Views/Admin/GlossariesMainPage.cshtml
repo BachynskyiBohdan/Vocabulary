@@ -28,49 +28,43 @@
                 @Html.ActionLink("Back to Phrases", "MainPage", null, new { @class = "left btn-primary", title = "Back to main page" })
 
                 @Html.ActionLink("Add Glossary", "AddGlossary", null,
-                                new { @class = "btn-default", title="Add new Glossary"})
+                    new { @class = "btn-default", title="Add new Glossary"})
             </div>
         </div>
 
-        <div class="layout-collumn layout-collumn-menu">
-
-        </div>
-
-        <div class="layout-collumn layout-collumn-main container-fluid">
-            <div class="words-container">
-                <table class="table table-hover">
-                    <thead>
+        <div class="layout-collumn container-fluid">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>LanguageId</th>
+                        <th>Language</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var glossary in Model.Glossaries)
+                    {
                         <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>LanguageId</th>
-                            <th>Language</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var glossary in Model.Glossaries)
-                        {
-                            <tr>
-                                <td>@glossary.Id</td>
-                                <td>@Html.ActionLink(glossary.Name, "SelectedGlossary", new { Id = glossary.Id },
-                                        new { title = "Display Glossary" })</td>
-                                <td>@glossary.LanguageId</td>
-                                <td>@Model.Languages[glossary.LanguageId]</td>
-                                <td>
-                                    <div class="word-editor">
-                                        @Html.ActionLink("Edit", "EditGlossary", new { id = glossary.Id }, new { title = "Edit Glossary" })
+                            <td>@glossary.Id</td>
+                            <td>@Html.ActionLink(glossary.Name, "SelectedGlossary", new { Id = glossary.Id },
+                                    new { title = "Display Glossary" })</td>
+                            <td>@glossary.LanguageId</td>
+                            <td>@Model.Languages[glossary.LanguageId]</td>
+                            <td>
+                                <div class="word-editor">
+                                    @Html.ActionLink("Edit", "EditGlossary", new { id = glossary.Id }, new { title = "Edit Glossary" })
                                         
-                                        @Html.ActionLink("Delete", "DeleteGlossary", new { id = glossary.Id }, new { title = "Delete Glossary" })
-                                    </div>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-            @Html.Action("GetGlossariesNavigation")
+                                    @Html.ActionLink("Delete", "DeleteGlossary", new { id = glossary.Id }, new { title = "Delete Glossary" })
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
+        @Html.Action("GetGlossariesNavigation")
     </div>
 </div>
 

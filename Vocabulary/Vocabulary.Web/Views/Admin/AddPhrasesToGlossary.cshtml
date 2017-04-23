@@ -23,83 +23,76 @@
             </div>
         </div>
 
-        <div class="layout-collumn layout-collumn-menu">
-
-        </div>
-
-        <div class="layout-collumn layout-collumn-main container-fluid">
-            <div class="words-container">
-                <table class="table table-hover">
-                    <thead>
-                        <tr onclick="sortTable">
-                            <th>ID</th>
-                            <th>Phrase</th>
-                            <th>PhraseType</th>
-                            <th>Transcription</th>
-                            <th>Frequency</th>
-                            <th>LanguageID</th>
-                            <th>Audio</th>
-                            <th>State</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var phrase in Model)
-                        {
-                            var flag = phrase.Glossaries.Any(g => g.Id == decimal.Parse(Session["GlossaryId"].ToString()));
+        <div class="layout-collumn container-fluid">
+            <table class="table table-hover">
+                <thead>
+                    <tr onclick="sortTable">
+                        <th>ID</th>
+                        <th>Phrase</th>
+                        <th>PhraseType</th>
+                        <th>Transcription</th>
+                        <th>Frequency</th>
+                        <th>LanguageID</th>
+                        <th>Audio</th>
+                        <th>State</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var phrase in Model)
+                    {
+                        var flag = phrase.Glossaries.Any(g => g.Id == decimal.Parse(Session["GlossaryId"].ToString()));
                             
-                            <tr>
-                                <td>@phrase.Id</td>
-                                <td>@phrase.Phrase</td>
-                                <td>@phrase.PhraseType</td>
-                                <td>@phrase.Transcription</td>
-                                <td>@phrase.Frequency</td>
-                                <td>@phrase.LanguageId</td>
-                                <td>
-                                    <img src="~/Content/soundIcon.png" style="width: 25px; height: 25px;" onclick="playAudio(@phrase.Id.ToString())" />
+                        <tr>
+                            <td>@phrase.Id</td>
+                            <td>@phrase.Phrase</td>
+                            <td>@phrase.PhraseType</td>
+                            <td>@phrase.Transcription</td>
+                            <td>@phrase.Frequency</td>
+                            <td>@phrase.LanguageId</td>
+                            <td>
+                                <img src="~/Content/soundIcon.png" style="width: 25px; height: 25px;" onclick="playAudio(@phrase.Id.ToString())" />
 
-                                    <audio id="@phrase.Id.ToString()">
-                                        <source src="@Url.Action("GetPhraseAudio", new { id = phrase.Id })" />
-                                    </audio>
-                                </td>
-                                <td>
-                                    @if (flag)
+                                <audio id="@phrase.Id.ToString()">
+                                    <source src="@Url.Action("GetPhraseAudio", new { id = phrase.Id })" />
+                                </audio>
+                            </td>
+                            <td>
+                                @if (flag)
+                                {
+                                    <div id="added-@phrase.Id" class="success-adding"></div>
+                                }
+                                else
+                                {
+                                    <div id="added-@phrase.Id"></div>
+                                }
+                            </td>
+                            <td>
+                                <div id="link-@phrase.Id" class="word-editor">
+                                    @if (!flag)
                                     {
-                                        <div id="added-@phrase.Id" class="success-adding"></div>
+                                        @Ajax.ActionLink("Add to glossary", "AddPhraseToGlossary", new { phraseId = phrase.Id },
+                                            new AjaxOptions()
+                                            {
+                                                Url = Url.Action("AddPhraseToGlossary", new { phraseId = phrase.Id }),
+                                                UpdateTargetId = phrase.Id.ToString(),
+                                                OnSuccess = "processData"
+                                            })
                                     }
                                     else
                                     {
-                                        <div id="added-@phrase.Id"></div>
+                                        <span>Already Added</span>
                                     }
-                                </td>
-                                <td>
-                                    <div id="link-@phrase.Id" class="word-editor">
-                                        @if (!flag)
-                                        {
-                                            @Ajax.ActionLink("Add to glossary", "AddPhraseToGlossary", new { phraseId = phrase.Id },
-                                                new AjaxOptions()
-                                                {
-                                                    Url = Url.Action("AddPhraseToGlossary", new { phraseId = phrase.Id }),
-                                                    UpdateTargetId = phrase.Id.ToString(),
-                                                    OnSuccess = "processData"
-                                                })
-                                        }
-                                        else
-                                        {
-                                            <span>Already Added</span>
-                                        }
-                                    </div>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-            @Html.Action("GetGlossaryPhrasesNavigation")
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
+        @Html.Action("GetGlossaryPhrasesNavigation")
     </div>
 </div>
-
 
 @section scripts
 {

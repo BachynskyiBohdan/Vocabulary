@@ -18,16 +18,19 @@
             {
                 <div class="field-container">
                     @Html.LabelFor(x => x.PhraseLanguage);
-                    @Html.DropDownListFor(x => x.PhraseLanguage, Model.Languages, new { @class = "form-control"})
+                    @Html.DropDownListFor(x => x.PhraseLanguage, Model.Languages, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.PhraseLanguage)
                 </div>
                 <div class="field-container">
                     @Html.LabelFor(x => x.TranslationLanguage);
-                    @Html.DropDownListFor(x => x.TranslationLanguage, Model.Languages, new { @class = "form-control"})
+                    @Html.DropDownListFor(x => x.TranslationLanguage, Model.Languages, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.TranslationLanguage)
                 </div>
-                
+
                 <div>
+                    @Html.LabelFor(x => x.ParseString);
                     @Html.TextAreaFor(x => x.ParseString,
-                        new { placeholder = "template: {phrase} — {translation} \n", @class = "form-control" })
+                        new { placeholder = "template: {sentence} — {translation} \n", @class = "form-control" })
                     @Html.ValidationMessageFor(x => x.ParseString)
                 </div>
 
