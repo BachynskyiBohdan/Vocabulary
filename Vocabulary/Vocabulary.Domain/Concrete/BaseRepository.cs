@@ -18,7 +18,14 @@ namespace Vocabulary.Domain.Concrete
 
         public TEntity GetFirst<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : class
         {
-            return DataContext.Set<TEntity>().First(predicate);
+            try
+            {
+                return DataContext.Set<TEntity>().First(predicate);
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         public IQueryable<TEntity> GetAll<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : class
@@ -38,14 +45,28 @@ namespace Vocabulary.Domain.Concrete
 
         public bool Add<TEntity>(TEntity entity) where TEntity : class
         {
-            DataContext.Set<TEntity>().Add(entity);
-            return SaveChanges();
+            try
+            {
+                DataContext.Set<TEntity>().Add(entity);
+                return SaveChanges();
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public bool Delete<TEntity>(TEntity entity) where TEntity : class
         {
-            DataContext.Set<TEntity>().Remove(entity);
-            return SaveChanges();
+            try
+            {
+                DataContext.Set<TEntity>().Remove(entity);
+                return SaveChanges();
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public bool SaveChanges()
