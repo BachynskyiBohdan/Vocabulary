@@ -16,6 +16,10 @@
             {
                 <div class="alert alert-success">@TempData["Success"]</div>
             }
+            else
+            {
+                <div class="alert alert-success" style="display: none"></div>
+            }
             @if (TempData.ContainsKey("Error"))
             {
                 <div class="alert alert-danger">@TempData["Error"]</div>
@@ -78,7 +82,8 @@
                                 @Html.ActionLink("Edit", "EditGlobalPhrase", new { id = phrase.Id }, new { title = "Edit Phrase" })
                                 @Html.ActionLink("Translations", "TranslationMainPage", new { phraseId = phrase.Id }, new { title = "Translations  Main Page" })
                                 @Html.ActionLink("Examples", "ExampleMainPage", new { phraseId = phrase.Id }, new { title = "Examples Main Page" })
-                                @Html.ActionLink("Delete", "DeleteGlobalPhraseFromGlossary", new { id = phrase.Id, glosId = Model.Id }, new { title = "Delete Phrase from Glossary" })
+                                <a href="javascript:void(0)" class="delete-button" title="Delete Phrase from Glossary" 
+                                   data-phrase-id=@phrase.Id data-glossary-id="@Model.Id">Delete</a>
                             </td>
                         </tr>
                     }
@@ -90,8 +95,22 @@
 @section scripts
 {
     <script>
-        $('.main-menu li:first-child a').addClass("selected");
-        $('.main-menu li:last-child a').removeClass("selected");
+        $('.delete-button').click(function (e) {
+            var t = $(e.currentTarget);
+            var id = t.attr('data-phrase-id');
+            var glid = t.attr('data-glossary-id');
+            $.ajax({
+                type: "POST",
+                url: "/Admin/DeleteGlobalPhraseFromGlossary?id=" + id + "&glosId="+glid,
+                success: function (data) {
+                    t.parents('tr').remove();
+                    $('.alert').text(data.result).css('display', "block");
+                    setTimeout(function () {
+                        $('.alert').css("display", 'none');
+                    }, 2500);
+                }
+            });
+        })
     </script>
     <script src="~/Scripts/Users/mainPage.js"></script>
 }

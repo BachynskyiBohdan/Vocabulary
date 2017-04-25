@@ -1,7 +1,4 @@
 ﻿//initialization
-$(".header .main-menu li:last-child a").addClass('selected');
-$(".header .main-menu li:first-child a").removeClass('selected');
-
 $('#phrase-language').val($('.content-container').attr('data-lang-id'));
 $('#translation-language').val($('.content-container').attr('data-trans-lang-id'));
 var plId = $('#phrase-language').val();
@@ -46,11 +43,11 @@ $(".pop-up-widget.background").click(function (e) {
     $widget.css('display', 'none');
 });
 
-$(".content-container").click(function (e) {
+$(document).on("click",".content-container", function (e) {
     var target = $(e.currentTarget);
     getDataAsync(target.attr('data-phrase-id'), target.attr('data-lang-id'));
 });
-$('.phrase-container .add-button').click(function (e) {
+$(document).on("click", '.phrase-container .add-button', function (e) {
     var t = $(e.currentTarget);
     var ch = $(t.find('div'));
     if (ch.hasClass('added')) {
@@ -77,14 +74,14 @@ $('.phrase-container .add-button').click(function (e) {
         ch.removeClass('not-added').addClass('added');
     }
 });
-$('.phrase-container .glossary-info').click(function(e) {
+$(document).on("click", '.phrase-container .glossary-info', function (e) {
     var t = $(e.currentTarget);
     var glId = t.attr('data-glossary-id');
     var cont = $('.content-container:first');
     var url = "/Glossary/Glossary/" + glId + "?langId=" + cont.attr('data-trans-lang-id');
     window.open(url, '_blank');
 });
-$('.phrase-container .remove-button').click(function (e) {
+$(document).on("click", '.phrase-container .remove-button', function (e) {
     var t = $(e.currentTarget);
     var stateList = [t.parent().parent().find('.content-container').attr('data-phrase-id')];
     deleteElementsAjax(stateList);
@@ -241,6 +238,7 @@ $.ajaxSetup({
     }
 });
 
+//parsing html also (always) can be done on the server side, but I do that here for clarity 
 function getVocabularyDataAsync() {
     var url = "/User/VocabularyData?phraseLangId=" + plId +
         "&transLangId=" + trlId + "&phraseType=" + phraseType +
@@ -264,7 +262,7 @@ function getVocabularyDataAsync() {
                     str += '<div class="transcription">' + phrase.Transcription + '</div>';
                 str += '—<div class="translation">' + translation.TranslationPhrase + '</div></div><div class="information">';
                 if (phrase.GlossaryId != null)
-                    str += '<div class="glossary-info"><a href="javascript:void(0)" title="' + phrase.GlossaryName + '">'
+                    str += '<div class="glossary-info" data-glossary-id="'+phrase.GlossaryId+'"><a href="javascript:void(0)" title="' + phrase.GlossaryName + '">'
                         + phrase.GlossaryName + '</a> </div>';
 
                 str += '<div class="remove-button" data-phrase-id="' + phrase.Id + '" title="Remove phrase from vocabulary"></div>' +
@@ -293,53 +291,10 @@ function getVocabularyDataAsync() {
 
                 t.append(str);
             }
-            $(".content-container").click(function (e) {
-                var target = $(e.currentTarget);
-                getDataAsync(target.attr('data-phrase-id'), target.attr('data-lang-id'));
-            });
-            $('.phrase-container .add-button').click(function (e) {
-                var t = $(e.currentTarget);
-                var ch = $(t.find('div'));
-                if (ch.hasClass('added')) {
-                    count--;
-                    $('.summary span').text(count);
-                    if (count == 0) {
-                        //hide sub-menu
-                        $menu.css('display', 'block');
-                        $menuSelected.css('display', 'none');
-                        $('.summary span').text("");
-                    }
-
-                    ch.removeClass('added').addClass('not-added');
-                } else {
-                    if (count == 0) {
-                        //display sub-menu
-                        $menu.css('display', 'none');
-                        $menuSelected.css('display', 'block');
-                    }
-                    count++;
-                    $('.summary span').text(count);
-
-                    ch.removeClass('not-added').addClass('added');
-                }
-            });
-            $('.phrase-container .glossary-info').click(function (e) {
-                var t = $(e.currentTarget);
-                var glId = t.attr('data-glossary-id');
-                var cont = $('.content-container:first');
-                var url = "/Glossary/Glossary/" + glId + "?langId=" + cont.attr('data-trans-lang-id');
-                window.open(url, '_blank');
-            });
-            $('.phrase-container .remove-button').click(function (e) {
-                var t = $(e.currentTarget);
-                var stateList = [t.parent().parent().find('.content-container').attr('data-phrase-id')];
-                deleteElementsAjax(stateList);
-            });
         }
     });
 
 }
-
 function getDataAsync(id) {
     var url = "/User/VocabularyElementData/" + id + "?langId=" + plId + "&transLangId=" + trlId;
     $.ajax({
@@ -467,7 +422,6 @@ $('remove-button').click(function (e) {
 
 
 // widget expand set-up
-
 var wg = $widget.find('.widget-glossary-container');
 var lb = $widget.find(".left-button");
 var rb = $widget.find(".right-button");

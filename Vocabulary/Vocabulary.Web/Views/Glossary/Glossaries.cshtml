@@ -4,8 +4,17 @@
 }
 
 @section header
-{ 
-    @{ Html.RenderPartial("PartialUserHeader"); }
+{
+    @{
+        if (User.IsInRole("Admin"))
+        {
+            Html.RenderPartial("PartialAdminHeader");
+        }
+        else
+        {
+            Html.RenderPartial("PartialUserHeader");
+        }
+    }
 }
 
 @Html.Action("GlossariesData", new {langId = @Model})

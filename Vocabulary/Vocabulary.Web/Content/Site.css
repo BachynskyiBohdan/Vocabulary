@@ -111,6 +111,7 @@ textarea {
 .main-menu {
     list-style: none;
     float: left;
+    margin-top: 20px;
 }
     .main-menu li {
         display: inline-block;
@@ -405,6 +406,7 @@ table, table th {
     display: inline-block;
     margin: 20px auto 40px 50px;
     padding: 0;
+    overflow: hidden;
     text-align: center;
     background: whitesmoke;
     box-shadow: 1px 1px 5px
@@ -423,7 +425,7 @@ table, table th {
     }
     .glossary-container span {
         display: block;
-        margin-top: 10px;
+        margin: 10px 2px 0 0;
         color: black;
         font-size: 1.15em;
     }
@@ -456,6 +458,7 @@ table, table th {
     .phrase-container .content-container {
         display: inline-block;
         width: 65%;
+        overflow: hidden;
         white-space: nowrap;
         margin-top: 12px;
         cursor: pointer;

@@ -15,7 +15,7 @@ using WebMatrix.WebData;
 
 namespace Vocabulary.Web.Controllers
 {
-    [Authorize(Roles = "User, PremiumUser")]
+    [Authorize]
     public class GlossaryController : Controller
     {
         #region Initialize
@@ -28,7 +28,6 @@ namespace Vocabulary.Web.Controllers
         private readonly IGlobalExampleRepository _globalExampleRepository;
         private readonly IGlobalPhraseRepository _globalPhraseRepository;
         private readonly IGlobalTranslationRepository _globalTranslationRepository;
-        private readonly SpeechSynthesizer _synthesizer;
 
         public GlossaryController(IUsersExampleRepository usersExampleRepository,
             IUsersPhraseRepository usersPhraseRepository,
@@ -36,8 +35,6 @@ namespace Vocabulary.Web.Controllers
             IGlossaryRepository glossaryRepository, IGlobalExampleRepository globalExampleRepository,
             IGlobalPhraseRepository globalPhraseRepository, IGlobalTranslationRepository globalTranslationRepository)
         {
-            _synthesizer = new SpeechSynthesizer();
-
             _usersExampleRepository = usersExampleRepository;
             _usersPhraseRepository = usersPhraseRepository;
             _usersTranslationRepository = usersTranslationRepository;

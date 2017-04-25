@@ -13,8 +13,12 @@
                 <img src="~/Content/glossary-logo.png" alt="LOGO" />
             </a>
             <ul class="main-menu">
-                <li><a class="button" title="Glossaries main page" href="@Url.Action("GlossariesMainPage", "Admin")">Glossaries</a></li>
-                <li><a class="button selected" title="Wors main page"  href="@Url.Action("MainPage", "Admin")">Words</a></li>
+                <li><a class="btn btn-default" title="Admin Glossaries main page" href="@Url.Action("Glossaries", "Glossary")">Glossaries</a></li>
+                <li><a class="btn btn-default" title="Wors main page" href="@Url.Action("Vocabulary", "User")">Vocabulary</a></li>
+            </ul>
+            <ul class="main-menu">
+                <li><a class="btn btn-default" title="Glossaries main page" href="@Url.Action("GlossariesMainPage", "Admin")">Glossaries</a></li>
+                <li><a class="btn btn-default" title="Wors main page" href="@Url.Action("MainPage", "Admin")">Words</a></li>
             </ul>
         </div>
     </div>

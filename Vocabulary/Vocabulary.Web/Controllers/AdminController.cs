@@ -77,7 +77,7 @@ namespace Vocabulary.Web.Controllers
                 GlobalPhrase = new GlobalPhrase(),
                 Languages = _languageRepository.Languages
                     .Select(
-                        x => new SelectListItem {Text = x.FullName, Value = x.Id.ToString(CultureInfo.InvariantCulture)})
+                        x => new SelectListItem {Text = x.FullName, Value = x.Id.ToString()})
                     .ToEnumerable()
             };
             return View(phraseModel);
@@ -130,7 +130,7 @@ namespace Vocabulary.Web.Controllers
         {
             var model = new ParsePhraseViewModel();
             _languageRepository.Languages.ForEach(
-                l => model.Languages.Add(new SelectListItem {Text = l.FullName, Value = l.Id.ToString(CultureInfo.InvariantCulture)}));
+                l => model.Languages.Add(new SelectListItem {Text = l.FullName, Value = l.Id.ToString()}));
             return View(model);
         }
         [HttpPost]
@@ -156,7 +156,9 @@ namespace Vocabulary.Web.Controllers
                 {
                     var mas = line.Split(new[] { '—' }, 2);
                     if (mas.Length < 2) continue;
-                    if (mas[0].Trim().Split(' ').Length == 1)
+                    mas[0] = mas[0].Trim();
+                    mas[1] = mas[1].Trim();
+                    if (mas[0].Split(' ').Length == 1)
                     {
                         wordsList += mas[0] + "\n";
                         continue;
@@ -164,7 +166,7 @@ namespace Vocabulary.Web.Controllers
                     var pTemp = new GlobalPhrase
                     {
                         Audio = GenerateAudio(mas[0]),
-                        Phrase = mas[0],
+                        Phrase = mas[0].Trim(),
                         PhraseType = PhraseType.Phrase,
                         LanguageId = phLangId,
 
@@ -205,7 +207,7 @@ namespace Vocabulary.Web.Controllers
         {
             var model = new ParsePhraseViewModel();
             _languageRepository.Languages.ForEach(
-                l => model.Languages.Add(new SelectListItem { Text = l.FullName, Value = l.Id.ToString(CultureInfo.InvariantCulture) }));
+                l => model.Languages.Add(new SelectListItem { Text = l.FullName, Value = l.Id.ToString() }));
             return View(model);
         }
         [HttpPost]
@@ -230,6 +232,8 @@ namespace Vocabulary.Web.Controllers
                 {
                     var mas = line.Split(new[] {'—'}, 2);
                     if (mas.Length < 2) continue;
+                    mas[0] = mas[0].Trim();
+                    mas[1] = mas[1].Trim();
 
                     var pTemp = new GlobalPhrase
                     {
@@ -279,8 +283,8 @@ namespace Vocabulary.Web.Controllers
 
             var lang = _languageRepository.Languages.FirstOrDefault(l => l.Id == globalPhrase.LanguageId);
             phraseModel.Languages = _languageRepository.Languages
-                .Select(x => new SelectListItem { Text = x.FullName, Value = x.Id.ToString(CultureInfo.InvariantCulture) }).ToEnumerable();
-            phraseModel.Languages.FirstOrDefault(x => x.Value == lang.Id.ToString(CultureInfo.InvariantCulture)).Selected = true;
+                .Select(x => new SelectListItem { Text = x.FullName, Value = x.Id.ToString() }).ToEnumerable();
+            phraseModel.Languages.FirstOrDefault(x => x.Value == lang.Id.ToString()).Selected = true;
 
             return View(phraseModel);
         }
@@ -325,7 +329,10 @@ namespace Vocabulary.Web.Controllers
 
             _globalPhraseRepository.Delete(globalPhrase);
             TempData["Success"] = string.Format("Phrase with Id = {0} was successfully deleted.", id);
-
+            if (Request.IsAjaxRequest())
+            {
+                return Json(new { result = TempData["Success"] }, JsonRequestBehavior.AllowGet);
+            }
             return RedirectToAction("MainPage");
         }
 
@@ -369,7 +376,7 @@ namespace Vocabulary.Web.Controllers
             {
                 Languages =
                     _languageRepository.Languages.Select(
-                        x => new SelectListItem {Text = x.FullName, Value = x.Id.ToString(CultureInfo.InvariantCulture)}).ToEnumerable(),
+                        x => new SelectListItem {Text = x.FullName, Value = x.Id.ToString()}).ToEnumerable(),
                 GlobalTranslation = {GlobalPhraseId = phraseId}
             };
 
@@ -485,7 +492,7 @@ namespace Vocabulary.Web.Controllers
                             new SelectListItem
                             {
                                 Text = x.TranslationPhrase,
-                                Value = x.Id.ToString(CultureInfo.InvariantCulture)
+                                Value = x.Id.ToString()
                             }).ToEnumerable()
             };
 
@@ -527,7 +534,7 @@ namespace Vocabulary.Web.Controllers
             _globalTranslationRepository.GlobalTranslations
                 .Where(t => t.GlobalPhraseId == phraseId)
                 .ForEach(
-                t => model.Translations.Add(new SelectListItem { Text = t.TranslationPhrase, Value = t.Id.ToString(CultureInfo.InvariantCulture) }));
+                t => model.Translations.Add(new SelectListItem { Text = t.TranslationPhrase, Value = t.Id.ToString() }));
             model.PhraseId = phraseId;
             return View(model);
         }
@@ -738,7 +745,7 @@ namespace Vocabulary.Web.Controllers
             var model = new GlossaryViewModel();
 
             _languageRepository.Languages.ForEach(
-                    l => model.Languages.Add(new SelectListItem {Text = l.FullName, Value = l.Id.ToString(CultureInfo.InvariantCulture)}));
+                    l => model.Languages.Add(new SelectListItem {Text = l.FullName, Value = l.Id.ToString()}));
 
             model.Languages.First().Selected = true;
 
@@ -765,7 +772,7 @@ namespace Vocabulary.Web.Controllers
             }
             model.Languages = new List<SelectListItem>();
             _languageRepository.Languages.ForEach(
-                l => model.Languages.Add(new SelectListItem { Text = l.FullName, Value = l.Id.ToString(CultureInfo.InvariantCulture) }));
+                l => model.Languages.Add(new SelectListItem { Text = l.FullName, Value = l.Id.ToString() }));
 
 
             return View(model);
@@ -833,6 +840,10 @@ namespace Vocabulary.Web.Controllers
                 globalPhrase.Glossaries.Remove(glossary);
                 ctx.SaveChanges();
                 TempData["Success"] = string.Format("Phrase with Id = {0} was successfully deleted.", id);
+            }
+            if (Request.IsAjaxRequest())
+            {
+                return Json(new { result = TempData["Success"] }, JsonRequestBehavior.AllowGet);
             }
             return RedirectToAction("SelectedGlossary", new { id = glosId });
         }
