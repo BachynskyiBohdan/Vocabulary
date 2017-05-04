@@ -148,15 +148,15 @@ namespace Vocabulary.Web.Controllers
             var id = phrase.Id;
             var translation = _globalTranslationRepository.Get(t => t.GlobalPhraseId == id && t.LanguageId == langId) ?? new GlobalTranslation();
             var examples = _globalExampleRepository.GlobalExamples
-                .Where(e => e.GlobalPhraseId == id)
-                .Where(e => e.GlobalTranslationId == translation.Id)
+                .Where(e => e.PhraseId == id)
+                .Where(e => e.TranslationLanguageId == translation.Id)
                 .AsEnumerable()
                 .Select(e =>
                         new GlobalExample
                         {
                             Id = e.Id,
-                            GlobalPhraseId = e.GlobalPhraseId,
-                            GlobalTranslationId = e.GlobalTranslationId,
+                            PhraseId = e.PhraseId,
+                            TranslationLanguageId = e.TranslationLanguageId,
                             Phrase = e.Phrase,
                             Translation = e.Translation
                         });
@@ -190,6 +190,7 @@ namespace Vocabulary.Web.Controllers
             _usersPhraseRepository.Add(new UsersPhrase(phrase)
             {
                 GlossaryId = glossaryId,
+                GlobalPhraseId = phrase.Id,
                 GlossaryName = glossary.Name,
                 UserId = WebSecurity.CurrentUserId,
                 LearningState = status ? 1 : 0
@@ -205,17 +206,17 @@ namespace Vocabulary.Web.Controllers
                 _usersTranslationRepository.Add(new UsersTranslation(translation) {UserPhraseId = userPhrase.Id});
             }
 
-           var usersTranslations = _usersTranslationRepository.UsersTranslations
-                .Where(t => t.UserPhraseId == userPhrase.Id).ToList();
-            for (var i = 0; i < tr.Count; i++)
-            {
-                var gtid = tr[i].Id;
-                var utid = usersTranslations[i].Id;
-                _globalExampleRepository.GlobalExamples
-                    .Where(e => e.GlobalPhraseId == phrase.Id && e.GlobalTranslationId == gtid)
-                    .ForEach(e => _usersExampleRepository.Add(
-                        new UsersExample(e) {UserPhraseId = userPhrase.Id, UserTranslationId = utid}));
-            }
+           //var usersTranslations = _usersTranslationRepository.UsersTranslations
+           //     .Where(t => t.UserPhraseId == userPhrase.Id).ToList();
+           // for (var i = 0; i < tr.Count; i++)
+           // {
+           //     var gtid = tr[i].Id;
+           //     var utid = usersTranslations[i].Id;
+           //     _globalExampleRepository.GlobalExamples
+           //         .Where(e => e.PhraseId == phrase.Id && e.TranslationLanguageId == gtid)
+           //         .ForEach(e => _usersExampleRepository.Add(
+           //             new UsersExample(e) {PhraseId = userPhrase.Id, TranslationLanguageId = utid}));
+           // }
 
             if (Request.IsAjaxRequest())
             {
@@ -223,6 +224,67 @@ namespace Vocabulary.Web.Controllers
             }
 
             return RedirectToAction("Glossary", new {id = glossary.Id, langId = glossary.LanguageId});
+        }
+        public ActionResult AddPhrasesToVocabulary(decimal glossaryId, int[] phraseIdList)
+        {
+            var glossary = _glossaryRepository.Get(g => g.Id == glossaryId);
+            if (glossary == null)
+            {
+                return HttpNotFound();
+            }
+
+            for (var k = 0; k < phraseIdList.Length; k++)
+            {
+                var id = phraseIdList[k];
+                var phrase = _globalPhraseRepository.Get(p => p.Id == id);
+                if (phrase == null)
+                {
+                    return HttpNotFound();
+                }
+
+                
+                if (!glossary.GlobalPhrases.Any(p => p.Id == id))
+                {
+                    return HttpNotFound();
+                }
+
+                _usersPhraseRepository.Add(new UsersPhrase(phrase)
+                {
+                    GlossaryId = glossaryId,
+                    GlobalPhraseId = phrase.Id,
+                    GlossaryName = glossary.Name,
+                    UserId = WebSecurity.CurrentUserId,
+                    LearningState = 0
+                });
+                var userPhrase = _usersPhraseRepository.UsersPhrases
+                    .Where(up => up.UserId == WebSecurity.CurrentUserId)
+                    .First(up => up.Phrase == phrase.Phrase);
+
+                var tr = _globalTranslationRepository.GlobalTranslations
+                    .Where(t => t.GlobalPhraseId == phrase.Id).ToList();
+                foreach (var translation in tr)
+                {
+                    _usersTranslationRepository.Add(new UsersTranslation(translation) {UserPhraseId = userPhrase.Id});
+                }
+
+                //var usersTranslations = _usersTranslationRepository.UsersTranslations
+                //    .Where(t => t.UserPhraseId == userPhrase.Id).ToList();
+                //for (var i = 0; i < tr.Count; i++)
+                //{
+                //    var gtid = tr[i].Id;
+                //    var utid = usersTranslations[i].Id;
+                //    _globalExampleRepository.GlobalExamples
+                //        .Where(e => e.PhraseId == phrase.Id && e.TranslationLanguageId == gtid)
+                //        .ForEach(e => _usersExampleRepository.Add(
+                //            new UsersExample(e) {PhraseId = userPhrase.Id, TranslationLanguageId = utid}));
+                //}
+            }
+            if (Request.IsAjaxRequest())
+            {
+                return Json(new { result = true }, JsonRequestBehavior.AllowGet);
+            }
+
+            return RedirectToAction("Glossary", new { id = glossary.Id, langId = glossary.LanguageId });
         }
 
         #region Helpers

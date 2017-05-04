@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -15,6 +14,9 @@ using Vocabulary.Domain.Abstract;
 using Vocabulary.Domain.Entities;
 using Vocabulary.Web.Models.Admin;
 using WebGrease.Css.Extensions;
+//reference Nuget Package NAudio.Lame
+using NAudio.Wave;
+using NAudio.Lame; 
 
 #pragma warning disable 1998
 
@@ -192,7 +194,8 @@ namespace Vocabulary.Web.Controllers
                 }
                 if (!string.IsNullOrEmpty(wordsList))
                 {
-                    await AddWordsByParse(wordsList);
+                    Session["GlossaryId"] = glossary.Id;
+                    await AddWordsToGlossaryByParse(wordsList);
                 }
                 TempData["Success"] = string.Format("Phrases was successfully added by parsing.");
             }).ContinueWith(t =>
@@ -466,7 +469,7 @@ namespace Vocabulary.Web.Controllers
             var list = new GlobalListViewModel
             {
                 GlobalExamples = _globalExampleRepository.GlobalExamples
-                    .Where(t => t.GlobalPhraseId == phraseId)
+                    .Where(t => t.PhraseId == phraseId)
                     .OrderBy(e => e.Id)
                     .Skip(count*(page - 1))
                     .Take(count).ToList()
@@ -492,11 +495,11 @@ namespace Vocabulary.Web.Controllers
                             new SelectListItem
                             {
                                 Text = x.TranslationPhrase,
-                                Value = x.Id.ToString()
+                                Value = x.LanguageId.ToString()
                             }).ToEnumerable()
             };
 
-            model.GlobalExample.GlobalPhraseId = phraseId;
+            model.GlobalExample.PhraseId = phraseId;
 
             return View(model);
         }
@@ -506,7 +509,7 @@ namespace Vocabulary.Web.Controllers
             if (ModelState.IsValid)
             {
                 var id = decimal.Parse(example.SelectedTranslation);
-                example.GlobalExample.GlobalTranslationId = id;
+                example.GlobalExample.TranslationLanguageId = id;
 
                 return Task.Factory.StartNew(() =>
                 {
@@ -534,7 +537,7 @@ namespace Vocabulary.Web.Controllers
             _globalTranslationRepository.GlobalTranslations
                 .Where(t => t.GlobalPhraseId == phraseId)
                 .ForEach(
-                t => model.Translations.Add(new SelectListItem { Text = t.TranslationPhrase, Value = t.Id.ToString() }));
+                t => model.Translations.Add(new SelectListItem { Text = t.TranslationPhrase, Value = t.LanguageId.ToString() }));
             model.PhraseId = phraseId;
             return View(model);
         }
@@ -560,8 +563,8 @@ namespace Vocabulary.Web.Controllers
                         Audio = GenerateAudio(mas[0]),
                         Phrase = mas[0],
                         Translation = mas[1],
-                        GlobalPhraseId = model.PhraseId,
-                        GlobalTranslationId = transId
+                        PhraseId = model.PhraseId,
+                        TranslationLanguageId = transId
                     });
                 }
                 TempData["Success"] = string.Format("Phrases was successfully added by parsing.");
@@ -598,7 +601,7 @@ namespace Vocabulary.Web.Controllers
                     _globalExampleRepository.Update(example);
                     TempData["Success"] = string.Format("Example with id = {0} was succesfully updated", example.Id);
 
-                }).ContinueWith(t => RedirectToAction("ExampleMainPage", new { phraseId = example.GlobalPhraseId })).Result;
+                }).ContinueWith(t => RedirectToAction("ExampleMainPage", new { phraseId = example.PhraseId })).Result;
             }
             return View(example);
         }
@@ -668,7 +671,7 @@ namespace Vocabulary.Web.Controllers
             return View(glossary);
         }
 
-        public ActionResult AddPhrasesToGlossary(int count = 20, int page = 1)
+        public ActionResult AddPhrasesToGlossary(int count = 100, int page = 1)
         {
             var id = decimal.Parse(Session["GlossaryId"].ToString());
             var glossary = _glossaryRepository.Get(g => g.Id == id);
@@ -737,7 +740,6 @@ namespace Vocabulary.Web.Controllers
             }
             return View(model);
         }
-
 
 
         public ActionResult AddGlossary()
@@ -870,7 +872,7 @@ namespace Vocabulary.Web.Controllers
         public ActionResult GetExamplesNavigation()
         {
             var id = decimal.Parse(Session["GlobalPhraseId"].ToString());
-            var count = _globalExampleRepository.GlobalExamples.Count(e => e.GlobalPhraseId == id);
+            var count = _globalExampleRepository.GlobalExamples.Count(e => e.PhraseId == id);
             return PartialView(count);
         }
 
@@ -935,11 +937,15 @@ namespace Vocabulary.Web.Controllers
             fp.Phrase.PhraseType = PhraseType.Word;
             
             fp.Translation.TranslationPhrase = document.QuerySelector("#wd_content span").InnerText;
+            if (document.QuerySelector("#word_forms") != null)
+            {
+                fp.Translation.TranslationPhrase += "/n" + document.QuerySelector("#word_forms").InnerText;
+            }
             fp.Translation.LanguageId = 3m;
 
             var collection = document.QuerySelectorAll("#wd_content .tr .ex").ToList();
             
-            //collection.Add(document.QuerySelector("#wd_content .block.phrases")); //TODO: parse this section
+            //collection.Add(document.QuerySelector("#wd_content .block.phrases")); 
             foreach (var htmlNode in collection)
             {
                 var lines = htmlNode.InnerHtml.Split(new[] {"<br>"}, StringSplitOptions.RemoveEmptyEntries);
@@ -947,28 +953,20 @@ namespace Vocabulary.Web.Controllers
                 {
                     var mas = line.Split(new[] {"&ensp;—&ensp;"}, StringSplitOptions.RemoveEmptyEntries);
                     if (mas.Length < 2) continue;
-                    var example = new GlobalExample();
-
-                    example.Phrase = mas[0].Replace("<i>", "").Trim();
-                    example.Translation = mas[1].Replace("</i>", "").Trim();
+                    var example = new GlobalExample
+                    {
+                        Phrase = mas[0].Replace("<i>", "").Trim(),
+                        Translation = mas[1].Replace("</i>", "").Trim()
+                    };
 
                     fp.Examples.Add(example);
                 }
             }
 
-            var stream = new MemoryStream();
+            fp.Phrase.Audio = GenerateAudio(fp.Phrase.Phrase);
+            foreach (var ex in fp.Examples)
             {
-                _synthesizer.SetOutputToWaveStream(stream);
-
-                _synthesizer.Speak(fp.Phrase.Phrase);
-                fp.Phrase.Audio = stream.GetBuffer();
-                foreach (var ex in fp.Examples)
-                {
-                    stream = new MemoryStream();
-                    _synthesizer.SetOutputToWaveStream(stream);
-                    _synthesizer.Speak(ex.Phrase);
-                    ex.Audio = stream.GetBuffer();
-                }
+                ex.Audio = GenerateAudio(ex.Phrase);
             }
 
             return fp;
@@ -983,6 +981,7 @@ namespace Vocabulary.Web.Controllers
                     glossary.GlobalPhrases.Add(fp.Phrase);
                     _glossaryRepository.Update(glossary);
                 }
+                else 
                 {
                     _globalPhraseRepository.Add(fp.Phrase);
                 }
@@ -995,20 +994,32 @@ namespace Vocabulary.Web.Controllers
 
                 foreach (var example in fp.Examples)
                 {
-                    example.GlobalPhraseId = phrase.Id;
-                    example.GlobalTranslationId = tr.Id;
+                    example.PhraseId = phrase.Id;
+                    example.TranslationLanguageId = tr.LanguageId;
                     _globalExampleRepository.Add(example);
                 }
             }
         }
 
-        private byte[] GenerateAudio(string phrase)
+        private byte[] GenerateAudio(string phrase) // generate wave audio and convert it to mp3(to decrease size)
         {
             var m = new MemoryStream();
+            var r = new MemoryStream();
+
             _synthesizer.SetOutputToWaveStream(m);
-            //I don't know why with sync piece of code need to be invoked in async action method
+            
+            //I don't know why sync piece of code needs to be invoked in async action method
             _synthesizer.Speak(phrase);
-            return m.GetBuffer();
+
+            m.Seek(0, SeekOrigin.Begin);
+            using (var retMs = new MemoryStream())
+            using (var rdr = new WaveFileReader(m))
+            using (var wtr = new LameMP3FileWriter(r, rdr.WaveFormat, LAMEPreset.VBR_100))
+            {
+                rdr.CopyTo(wtr);
+            }
+
+            return r.GetBuffer();
         }
 
         public ActionResult GetPhraseAudio(decimal id)

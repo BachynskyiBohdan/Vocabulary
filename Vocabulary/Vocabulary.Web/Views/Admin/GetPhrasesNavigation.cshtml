@@ -1,7 +1,7 @@
 ﻿@model int
 
 @{
-    var elementsPerPage = int.Parse(Session["ElementsPerPage"].ToString());
+    var elementsPerPage = int.Parse(Request.QueryString["count"] ?? Session["ElementsPerPage"].ToString());
     var pages = (int)Math.Ceiling((double)Model / elementsPerPage);
     int curPage;
     int.TryParse(Request["page"], out curPage);
@@ -16,11 +16,11 @@
     {
         if (i == curPage)
         {
-            @Html.ActionLink(i.ToString(), "TranslationMainPage", new { page = i, count = elementsPerPage }, new {@class = "selected"})
+            @Html.ActionLink(i.ToString(), "MainPage", new { page = i, count = elementsPerPage }, new {@class = "selected"})
         }
         else
         {
-            @Html.ActionLink(i.ToString(), "TranslationMainPage", new { page = i, count = elementsPerPage })
+            @Html.ActionLink(i.ToString(), "MainPage", new { page = i, count = elementsPerPage })
         }
 
     }

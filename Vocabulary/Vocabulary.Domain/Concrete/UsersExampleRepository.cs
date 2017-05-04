@@ -50,8 +50,8 @@ namespace Vocabulary.Domain.Concrete
             r.Audio = entity.Audio;
             r.Phrase = entity.Phrase;
             r.Translation = entity.Translation;
-            r.UserPhraseId = entity.UserPhraseId;
-            r.UserTranslationId = entity.UserTranslationId;
+            r.PhraseId = entity.PhraseId;
+            r.TranslationLanguageId = entity.TranslationLanguageId;
 
             return SaveChanges();
         }

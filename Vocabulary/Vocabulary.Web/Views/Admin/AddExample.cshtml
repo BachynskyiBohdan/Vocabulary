@@ -20,7 +20,7 @@
                 @Html.AntiForgeryToken()
                 @Html.ValidationSummary()
 
-                @Html.HiddenFor(x => x.GlobalExample.GlobalPhraseId)
+                @Html.HiddenFor(x => x.GlobalExample.PhraseId)
                 <div class="field-container ">
                     @Html.TextBoxFor(x => x.GlobalExample.Phrase, new { placeholder = "Phrase", @class = "form-control" })
                     @Html.ValidationMessageFor(x => x.GlobalExample.Phrase)

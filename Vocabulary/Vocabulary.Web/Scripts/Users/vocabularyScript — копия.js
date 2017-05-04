@@ -14,14 +14,8 @@ var autoPlay = false;
 var $widget = $('.pop-up-widget');
 var $menu = $('#main-header-menu');
 var $menuSelected = $('#selected-header-menu');
-var $contentContainer = $(".container.container-fluid");
-
 var $curElement = $('.element-indicator span:first');
 var $elCount = $('.element-indicator span:last');
-
-var $loadPhrase = $('.loading-logo#loading-phrase');
-var $loadExamples = $('.loading-logo#loading-examples');
-var $loadContainer = $('.loading-logo#loading-data');
 
 var count = 0;
 
@@ -255,53 +249,103 @@ function deleteElementsAjax(list) {
 }
 
 
-var exAjax = null;
-var dataAjax = null;
+$.ajaxSetup({
+    beforeSend: function () {
+        // show gif here, eg:
+        $("#loading-container").show();
+    },
+    complete: function () {
+        // hide gif here, eg:
+        setTimeout(function () {
+            $("#loading-container").hide();
+        }, 1000);
+    }
+});
 
+//parsing html also (always) can be done on the server side, but I do that here for clarity 
 function getVocabularyDataAsync() {
     var url = "/User/VocabularyData?phraseLangId=" + plId +
         "&transLangId=" + trlId + "&phraseType=" + phraseType +
         "&glossary=" + glId + 
         "&learnState=" + learnState + "&search=" + search;
-    if (dataAjax && dataAjax.readyState != 4) {
-        dataAjax.abort();
-    }
-    $contentContainer.html("");
-    dataAjax = $.ajax({
+    $.ajax({
         type: "POST",
         url: url,
-        async: true,
         success: function (data) {
             if (data == null) return;
-            var t = $contentContainer;
-            $elCount.text(data.data.length);
-            for (var i = 0; i < data.data.length; i++) {
-                $(data.data[i]).appendTo(t).fadeIn('slow');
+            var t = $('.container.container-fluid');
+            t.html('');
+            $elCount.text(data.phrases.length);
+            for (var i = 0; i < data.phrases.length; i++) {
+                var phrase = data.phrases[i];
+                var translation = data.translations[i];
+                var str = '<div class="phrase-container"><div class="add-button" data-phrase-id="' + phrase.id + '"><div class="not-added"></div></div>' +
+                    '<div class="audio"><img src="/Content/soundIcon.png" style="width: 25px; height: 25px;" onclick="playAudio(\'audio-' + phrase.Id + '\')" />' +
+                    '<audio id="audio-' + phrase.Id + '"><source src="/User/GetUsersPhraseAudio/' + phrase.Id + '"/></audio></div>' +
+                    '<div class="content-container" data-phrase-id="' + phrase.Id + '" data-lang-id="' + phrase.LanguageId + '" data-index="' + (i+1) + '"' +
+                    ' data-trans-lang-id="' + translation.LanguageId + '">' + '<div class="phrase">' + phrase.Phrase + '</div>';
+                if (phrase.Transcription != null)
+                    str += '<div class="transcription">' + phrase.Transcription + '</div>';
+                str += '—<div class="translation">' + translation.TranslationPhrase + '</div></div><div class="information">';
+                if (phrase.GlossaryId != null)
+                    str += '<div class="glossary-info" data-glossary-id="'+phrase.GlossaryId+'"><a href="javascript:void(0)" title="' + phrase.GlossaryName + '">'
+                        + phrase.GlossaryName + '</a> </div>';
+
+                str += '<div class="remove-button" data-phrase-id="' + phrase.Id + '" title="Remove phrase from vocabulary"></div>' +
+                    '<div class="learning-state" title="learning state: ' + (phrase.LearningState * 100) + '%">';
+                switch ((phrase.LearningState * 100)) {
+                    case 0:
+                        str += '<div class="unknown"></div>';
+                        break;
+                    case 25:
+                        str += '<div class="first"></div>';
+                        break;
+                    case 50:
+                        str += '<div class="second"></div>';
+                        break;
+                    case 75:
+                        str += '<div class="third"></div>';
+                        break;
+                    case 100:
+                        str += '<div class="known"></div>';
+                        break;
+                }
+                str += '</div>';
+                if (phrase.Frequency != null)
+                    str += '<div class="frequency" title="word rank">' + phrase.Frequency + '</div>';
+                str += '</div></div>';
+
+                t.append(str);
             }
-        },
-        beforeSend: function () {
-            $loadContainer.show();
-        },
-        complete: function () {
-            $loadContainer.hide();
         }
     });
 
 }
 function getDataAsync(id, index) {
-    var url = "/User/VocabularyElementData/" + id + "?transLangId=" + trlId;
-    if (exAjax && exAjax.readyState != 4) {
-        exAjax.abort();
-    }
+    var url = "/User/VocabularyElementData/" + id + "?langId=" + plId + "&transLangId=" + trlId;
     $.ajax({
         type: "GET",
         url: url,
         success: function (data) {
             if (data == null) return;
-            exAjax = getExamplesAsync(data.phrase.Id, data.phrase.GlobalPhraseId);
             var p = $widget;
             p.css('display', 'block');
-
+            var t = p.find('tbody');
+            t.html("");
+            // example table
+            for (var i = 0; i < data.examples.length; i++) {
+                var str = '<tr>' +
+                    '<td style="text-align: left">' + data.examples[i].Phrase + '</td>' +
+                    '<td style="text-align: left">' + data.examples[i].Translation + '</td>' +
+                    '<td><img src="/Content/soundIcon.png" style="width: 25px; height: 25px;" onclick="playAudio(' + data.examples[i].Id + ')" />' +
+                    ' <audio id="' + data.examples[i].Id;
+                if (data.examples[i].IsUsersExample) {
+                    str += '"> <source src="/User/GetUsersExampleAudio?id=' + data.examples[i].Id + '"/></audio></td>';
+                } else {
+                    str += '"> <source src="/User/GetGlobalExampleAudio?id=' + data.examples[i].Id + '"/></audio></td>';
+                }
+                t.append(str);
+            }
             t = $(".widget-phrase-container");
             var cont = t.find('.phrase');
             cont.html("");
@@ -324,8 +368,7 @@ function getDataAsync(id, index) {
 
             cont = t.find('.audio');
             cont.find('audio').remove();
-            //cont.append("<audio  id='widget-audio'><source src='/User/GetUsersPhraseAudio?id=" + data.phrase.Id + "'/></audio>");
-            cont.append("<audio  id='widget-audio'><source src='" + data.audio + "'/></audio>");
+            cont.append("<audio  id='widget-audio'><source src='/User/GetUsersPhraseAudio?id=" + data.phrase.Id + "'/></audio>");
 
             //auto-play
             if (autoPlay) {
@@ -360,35 +403,6 @@ function getDataAsync(id, index) {
             //remove-button
             t = p.find('.remove-button');
             t.attr('data-phrase-id', data.phrase.Id);
-        },
-        beforeSend: function () {
-            $loadPhrase.show();
-        },
-        complete: function () {
-            $loadPhrase.hide();
-        }
-    });
-    
-}
-function getExamplesAsync(id, glId) {
-    var url = "/User/VocabularyExamplesData/" + id + "?glId=" + glId + "&transLangId=" + trlId;
-    var t = $widget.find('tbody');
-    t.html("");
-    return $.ajax({
-        type: "GET",
-        url: url,
-        success: function (data) {
-            if (data == null) return;
-            // example table
-            for (var i = 0; i < data.examples.length; i++) {
-                $(data.examples[i]).appendTo(t).fadeIn('slow');
-            }
-        },
-        beforeSend: function () {
-            $loadExamples.show();
-        },
-        complete: function () {
-            $loadExamples.hide();
         }
     });
 }

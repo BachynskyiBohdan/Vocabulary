@@ -15,7 +15,7 @@
                 <div id="main-header-menu">
                     <div class="search-box">
                         <div class="col-xs-7">
-                            <input type="text" id="search" />
+                            <input type="text" id="search" placeholder="search query..." />
                         </div>
                         <a class="btn btn-default" href="javascript:void(0)" id="add-phrase">Add new</a>
                     </div>
@@ -79,12 +79,12 @@
             
             <div id="loading-container" class="alert-info" style="display: none;">loading...</div>
         </div>
-        
+        <div class="loading-logo" id="loading-data"></div>
         <div class="container container-fluid">
-            @for (var i = 0; i < @Model.Phrases.Count; i++)
+            @for (var i = 0; i < Model.Phrases.Count; i++)
             {
-                var phrase = @Model.Phrases[i];
-                var translation = @Model.Translations[i];
+                var phrase = Model.Phrases[i];
+                var translation = Model.Translations[i];
 
                 <div class="phrase-container">
                     <div class="add-button" data-phrase-id="@phrase.Id">
@@ -99,7 +99,7 @@
                         </audio>
                     </div>
 
-                    <div class="content-container" data-phrase-id="@phrase.Id"
+                    <div class="content-container" data-phrase-id="@phrase.Id" data-index="@(i+1)"
                          data-lang-id="@phrase.LanguageId" data-trans-lang-id="@translation.LanguageId"
                          title="@translation.TranslationPhrase">
 
@@ -122,27 +122,27 @@
                                 <a href="javascript:void(0)" title="@phrase.GlossaryName">@phrase.GlossaryName</a>
                             </div>
                         }
-                        
+
                         <div class="remove-button" data-phrase-id="@phrase.Id" title="Remove phrase from vocabulary">
                         </div>
 
                         <div class="learning-state" title="learning state: @(phrase.LearningState*100)%">
-                            @switch ((int) (phrase.LearningState*100))
+                            @switch ((int)(phrase.LearningState * 100))
                             {
                                 case 0:
                                     <div class="unknown"></div>
                                     break;
                                 case 25:
-                                    <div class="first"></div>
+                                <div class="first"></div>
                                     break;
                                 case 50:
-                                    <div class="second"></div>
+                                <div class="second"></div>
                                     break;
                                 case 75:
-                                    <div class="third"></div>
+                                <div class="third"></div>
                                     break;
                                 case 100:
-                                    <div class="known"></div>
+                                <div class="known"></div>
                                     break;
                             }
                         </div>
@@ -151,7 +151,7 @@
                         {
                             <div class="frequency" title="word rank">@phrase.Frequency</div>
                         }
-                       
+
                     </div>
                 </div>
             }
@@ -168,6 +168,7 @@
                 </div>
 
                 <div class="widget-phrase-container">
+                    <div class="loading-logo" id="loading-phrase"></div>
                     <div class="phrase"></div>
 
                     <div class="audio" onclick='playAudio("widget-audio")'>
@@ -182,6 +183,7 @@
 
                 <div class="widget-examples-container">
                     <h1>Examples:</h1>
+                    <div class="loading-logo" id="loading-examples"></div>
                     <table class="table table-hover">
                         <thead>
                             <tr>
@@ -194,8 +196,18 @@
                     </table>
                 </div>
             </div>
+
             <a class="left-button" href="javascript: void(0)"></a>
             <a class="right-button" href="javascript: void(0)"> </a>
+            
+            <div class="element-indicator">
+                <span>5</span>
+                из 
+                <span>@Model.Phrases.Count</span>
+            </div>
+            
+            <div class="auto-play disabled" title="enable/disable autoplay"></div>
+
         </div>
 
     </div>

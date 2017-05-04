@@ -1,7 +1,7 @@
 ﻿@model int
 
 @{
-    var elementsPerPage = int.Parse(Session["ElementsPerPage"].ToString());
+    var elementsPerPage = int.Parse(Request.QueryString["count"] ?? Session["ElementsPerPage"].ToString());
     var pages = (int)Math.Ceiling((double)Model / elementsPerPage);
     var id = decimal.Parse(Session["GlossaryId"].ToString());
     var langId = decimal.Parse(Session["LanguageId"].ToString()); 
@@ -19,11 +19,11 @@
     {
         if (i == curPage)
         {
-            @Html.ActionLink(i.ToString(), "AddPhrasesToGlossary", new {page = i, count = elementsPerPage, id, langId}, new {@class = "selected"})
+            @Html.ActionLink(i.ToString(), "AddPhrasesToGlossary", new { page = i, count = elementsPerPage, id, langId }, new { @class = "selected" })
         }
         else
         {
-            @Html.ActionLink(i.ToString(), "AddPhrasesToGlossary", new {page = i, count = elementsPerPage, id, langId})
+            @Html.ActionLink(i.ToString(), "AddPhrasesToGlossary", new { page = i, count = elementsPerPage, id, langId })
         }
     }
 </div>

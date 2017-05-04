@@ -68,6 +68,7 @@
     <Compile Include="Concrete\GlobalTranslationRepository.cs" />
     <Compile Include="Concrete\GlobalPhraseRepository.cs" />
     <Compile Include="Concrete\UsersTranslationRepository.cs" />
+    <Compile Include="Entities\BaseExample.cs" />
     <Compile Include="Entities\EFDbContext.cs" />
     <Compile Include="Entities\GlobalExample.cs" />
     <Compile Include="Entities\Glossary.cs" />

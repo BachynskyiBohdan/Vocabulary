@@ -14,6 +14,7 @@ namespace Vocabulary.Domain.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public decimal Id { get; set; }
         public decimal UserId { get; set; }
+        public decimal? GlobalPhraseId { get; set; }
         public decimal LanguageId { get; set; }
         public decimal? GlossaryId { get; set; }
         public string GlossaryName { get; set; }

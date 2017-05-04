@@ -60,6 +60,7 @@ namespace Vocabulary.Web.Controllers
         {
             return View();
         }
+
         /// <summary>
         /// 
         /// </summary>
@@ -68,26 +69,77 @@ namespace Vocabulary.Web.Controllers
         /// <param name="phraseType"></param>
         /// <param name="learnState">Learing State. [0.0, 1.0], by default = -1 (all states)</param>
         /// <param name="search"></param>
+        /// <param name="glossary"></param>
         /// <returns></returns>
-        public ActionResult VocabularyData(decimal phraseLangId = 1, decimal transLangId = 3, 
-            string phraseType = "All", int learnState = -1, string search = "")
+        public ActionResult VocabularyData(decimal phraseLangId = 1, decimal transLangId = 3,
+            string phraseType = "All", int learnState = -1, string search = "", string glossary = "All")
         {
-            var model = ParseRequestParametersForVocabulary(phraseLangId, transLangId, phraseType, learnState, search);
+            var model = ParseRequestParametersForVocabulary(phraseLangId, transLangId, phraseType, learnState, search, glossary);
 
             if (Request.IsAjaxRequest())
             {
                 var serializer = new JavaScriptSerializer {MaxJsonLength = Int32.MaxValue};
                 var result = new ContentResult
                 {
-                    Content = serializer.Serialize(new {phrases = model.Phrases, translations = model.Translations}),
+                    //Content = serializer.Serialize(new {phrases = model.Phrases, translations = model.Translations}),
+                    Content = serializer.Serialize(new { data = CreateHtmlDataElements(model.Phrases, model.Translations) }),
                     ContentType = "application/json"
                 };
                 return result;
             }
             return PartialView(model);
         }
+        private List<string> CreateHtmlDataElements(List<UsersPhrase> p, List<UsersTranslation> t)
+        {
+            var l = new List<string>();
+            
+            for (var i = 0; i < p.Count; i++)
+            {
+                var str = "";
+                var phrase = p[i];
+                var translation = t[i];
+                str += "<div class='phrase-container'><div class='add-button' data-phrase-id='" + phrase.Id + "'><div class='not-added'></div></div>" +
+                    "<div class='audio'><img src='/Content/soundIcon.png' style='width: 25px; height: 25px;' onclick='playAudio(\"audio-" + phrase.Id + "\")' />" +
+                    "<audio id='audio-" + phrase.Id + "'><source src='/User/GetUsersPhraseAudio/" + phrase.Id + "'/></audio></div>" +
+                    "<div class='content-container' data-phrase-id='" + phrase.Id + "' data-lang-id='" + phrase.LanguageId + "' data-index='" + (i + 1) + "'" +
+                    " data-trans-lang-id='" + translation.LanguageId + "'>" + "<div class='phrase'>" + phrase.Phrase + "</div>";
+                if (phrase.Transcription != null)
+                    str += "<div class='transcription'>" + phrase.Transcription + "</div>";
+                str += "—<div class='translation'>" + translation.TranslationPhrase + "</div></div><div class='information'>";
+                if (phrase.GlossaryId != null)
+                    str += "<div class='glossary-info' data-glossary-id='" + phrase.GlossaryId + "'><a href='javascript:void(0)' title='" + phrase.GlossaryName + "'>"
+                        + phrase.GlossaryName + "</a> </div>";
+
+                str += "<div class='remove-button' data-phrase-id='" + phrase.Id + "' title='Remove phrase from vocabulary'></div>" +
+                    "<div class='learning-state' title='learning state: " + (phrase.LearningState * 100) + "%'>";
+                switch ((int)(phrase.LearningState * 100))
+                {
+                    case 0:
+                        str += "<div class='unknown'></div>";
+                        break;
+                    case 25:
+                        str += "<div class='first'></div>";
+                        break;
+                    case 50:
+                        str += "<div class='second'></div>";
+                        break;
+                    case 75:
+                        str += "<div class='third'></div>";
+                        break;
+                    case 100:
+                        str += "<div class='known'></div>";
+                        break;
+                }
+                str += "</div>";
+                if (phrase.Frequency != null)
+                    str += "<div class='frequency' title='word rank'>" + phrase.Frequency + "</div>";
+                str += "</div></div>";
+                l.Add(str);
+            }
+            return l;
+        }
         private VocabularyListViewModel ParseRequestParametersForVocabulary(decimal phraseLangId, decimal transLangId, string phraseType,
-            int learnState, string search)
+            int learnState, string search, string glossary)
         {
             var model = new VocabularyListViewModel();
             decimal userId = WebSecurity.CurrentUserId;
@@ -97,7 +149,12 @@ namespace Vocabulary.Web.Controllers
             var query = _usersPhraseRepository.UsersPhrases
                 .Where(p => p.UserId == userId)
                 .Where(p => p.LanguageId == phraseLangId);
-            
+
+            if (glossary != "All")
+            {
+                var id = decimal.Parse(glossary);
+                query = query.Where(p => p.GlossaryId == id);
+            }
             if (type != PhraseType.All)
                 query = query.Where(p => p.PhraseType == type);
             if (learnState != -1)
@@ -136,11 +193,10 @@ namespace Vocabulary.Web.Controllers
                             Text = l.FullName,
                             Value = l.Id.ToString(CultureInfo.InvariantCulture)
                         }));
-
             return model;
         }
 
-        public ActionResult VocabularyElementData(decimal id, decimal langId = 1, decimal transLangId = 3)
+        public ActionResult VocabularyElementData(decimal id, decimal transLangId = 3)
         {
             if (!Request.IsAjaxRequest())
             {
@@ -149,31 +205,71 @@ namespace Vocabulary.Web.Controllers
             
             var phrase =  _usersPhraseRepository.UsersPhrases
                 .Where(up => up.UserId == WebSecurity.CurrentUserId)
-                .Where(up => up.LanguageId == langId)
                 .FirstOrDefault(up => up.Id == id);
             if (phrase == null)
             {
                 return HttpNotFound();
             }
+            var audio = "data:audio/mpeg; base64, " + Convert.ToBase64String(phrase.Audio);
             phrase.Audio = null;
 
             var translation = _usersTranslationRepository.UsersTranslations
                 .Where(t => t.UserPhraseId == phrase.Id)
                 .FirstOrDefault(t => t.LanguageId == transLangId) ?? new UsersTranslation();
 
+            var serializer = new JavaScriptSerializer { MaxJsonLength = Int32.MaxValue };
+            var result = new ContentResult
+            {
+                Content = serializer.Serialize(new { phrase, translation, audio }),
+                ContentType = "application/json"
+            };
+            return result;
+        }
+
+        public ActionResult VocabularyExamplesData(decimal id, decimal? glId = null, decimal transLangId = 3)
+        {
+            if (!Request.IsAjaxRequest())
+            {
+                return RedirectToAction("Vocabulary");
+            }
+
             var examples = _usersExampleRepository.UsersExamples
-                .Where(e => e.UserPhraseId == phrase.Id)
+                .Where(e => e.PhraseId == id)
                 .AsEnumerable()
-                .Select( e => { e.Audio = null; return e; })
+                .Select(e => { e.Audio = null; return e as BaseExample; })
                 .ToList();
+            if (glId != null)
+                examples.AddRange(_globalExampleRepository
+                    .GetAll(e => e.PhraseId == glId && e.TranslationLanguageId == transLangId));
 
             var serializer = new JavaScriptSerializer { MaxJsonLength = Int32.MaxValue };
             var result = new ContentResult
             {
-                Content = serializer.Serialize(new { phrase, translation, examples }),
+                Content = serializer.Serialize(new { examples = CreateHtmlExamplesElements(examples)}),
                 ContentType = "application/json"
             };
             return result;
+        }
+        private List<string> CreateHtmlExamplesElements(List<BaseExample> ex)
+        {
+            var l = new List<string>();
+            for (var i = 0; i < ex.Count; i++)
+            {
+                var str = "<tr>" + "<td style='text-align: left'>" + ex[i].Phrase + "</td>" +
+                    "<td style='text-align: left'>" + ex[i].Translation + "</td>" +
+                    "<td><img src='/Content/soundIcon.png' style='width: 25px; height: 25px;' onclick='playAudio(" + ex[i].Id + ")' />" +
+                    " <audio id='" + ex[i].Id;
+                if (ex[i].IsUsersExample)
+                {
+                    str += "'> <source src='/User/GetUsersExampleAudio?id=" + ex[i].Id + "'/></audio></td>";
+                }
+                else
+                {
+                    str += "'> <source src='/User/GetGlobalExampleAudio?id=" + ex[i].Id + "'/></audio></td>";
+                }
+                l.Add(str);
+            }
+            return l;
         }
 
         public ActionResult DeleteFromVocabulary(int[] phraseIdList)
@@ -187,7 +283,7 @@ namespace Vocabulary.Web.Controllers
 
                 if (phrase == null) continue;
                 var ex = _usersExampleRepository.UsersExamples
-                    .Where(e => e.UserPhraseId == phrase.Id)
+                    .Where(e => e.PhraseId == phrase.Id)
                     .ToList();
 
                 var tr = _usersTranslationRepository.UsersTranslations
@@ -254,6 +350,15 @@ namespace Vocabulary.Web.Controllers
         public ActionResult GetUsersExampleAudio(decimal id)
         {
             var example = _usersExampleRepository.Get(p => p.Id == id);
+            if (example.Audio == null)
+            {
+                return null;
+            }
+            return File(example.Audio, "audio/mpeg");
+        }
+        public ActionResult GetGlobalExampleAudio(decimal id)
+        {
+            var example = _globalExampleRepository.Get(p => p.Id == id);
             if (example.Audio == null)
             {
                 return null;

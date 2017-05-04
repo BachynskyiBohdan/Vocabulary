@@ -46,3 +46,8 @@ C:\Users\Bogdan\Documents\Visual Studio 2013\Projects\РАБОТА\ASP.NET\Vocab
 C:\Users\Bogdan\Documents\Visual Studio 2013\Projects\РАБОТА\ASP.NET\Vocabulary\Vocabulary.Web\obj\Debug\Vocabulary.Web.csprojResolveAssemblyReference.cache
 C:\Users\Bogdan\Documents\Visual Studio 2013\Projects\РАБОТА\ASP.NET\Vocabulary\Vocabulary.Web\obj\Debug\Vocabulary.Web.dll
 C:\Users\Bogdan\Documents\Visual Studio 2013\Projects\РАБОТА\ASP.NET\Vocabulary\Vocabulary.Web\obj\Debug\Vocabulary.Web.pdb
+C:\Users\Bogdan\Documents\Visual Studio 2013\Projects\РАБОТА\ASP.NET\Vocabulary\Vocabulary.Web\bin\libmp3lame.32.dll
+C:\Users\Bogdan\Documents\Visual Studio 2013\Projects\РАБОТА\ASP.NET\Vocabulary\Vocabulary.Web\bin\libmp3lame.64.dll
+C:\Users\Bogdan\Documents\Visual Studio 2013\Projects\РАБОТА\ASP.NET\Vocabulary\Vocabulary.Web\bin\NAudio.dll
+C:\Users\Bogdan\Documents\Visual Studio 2013\Projects\РАБОТА\ASP.NET\Vocabulary\Vocabulary.Web\bin\NAudio.Lame.dll
+C:\Users\Bogdan\Documents\Visual Studio 2013\Projects\РАБОТА\ASP.NET\Vocabulary\Vocabulary.Web\bin\NAudio.xml

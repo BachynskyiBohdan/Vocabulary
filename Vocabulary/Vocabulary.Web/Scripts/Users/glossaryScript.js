@@ -98,11 +98,6 @@ $(".left-button").add(".right-button").click(function (e) {
     getDataAjax(t.getAttribute('data-id'), t.getAttribute('data-langId'), t.getAttribute('data-index'));
 });
 
-$(".not-added").click(function(e) {
-    var target = $(e.currentTarget);
-    var id = target.attr('id');
-});
-
 $(".add-button").click(function (e) {
     var target = $(e.currentTarget).find('.not-added');
     if (!target) return;
@@ -114,8 +109,30 @@ $(".add-button").click(function (e) {
             if (!data.result) return;
             target.removeClass('not-added').addClass('added');
         }
+    });
+
 });
 
+$('#select-all').click(function(e) {
+    var elList = $('.add-button .not-added');
+    var phraseIdList = [];
+    for (var i = 0; i < elList.length; i++) {
+        phraseIdList[i] = $(elList[i]).attr('data-phrase-id');
+    }
+    if (elList.length != 0) {
+        $.ajax({
+            type: "POST",
+            url: "/Glossary/AddPhrasesToVocabulary?glossaryId=" + $(elList[0]).attr('data-glossary-id'),
+            data: JSON.stringify({ "phraseIdList": phraseIdList }),
+            contentType: "application/json",
+            success: function (data) {
+                if (!data.result) return;
+                for (var i = 0; i < elList.length; i++) {
+                    elList[i].removeClass('not-added').addClass('added');
+                }
+            }
+        });
+    }
 });
 
 $(".add-buttons a").click(function(e) {

@@ -8,17 +8,9 @@ using System.Threading.Tasks;
 
 namespace Vocabulary.Domain.Entities
 {
-    //[Table("GlobalExamples")]
-    public class GlobalExample
+    public class GlobalExample : BaseExample
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public decimal Id { get; set; }
-        public decimal GlobalPhraseId { get; set; }
-        public string Phrase { get; set; }
-        public decimal GlobalTranslationId { get; set; }
-        public string Translation { get; set; }
-
-        public byte[] Audio { get; set; }
+        public GlobalExample() : base() { }
+        public GlobalExample(GlobalExample e) : base(e) { }
     }
 }

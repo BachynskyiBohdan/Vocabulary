@@ -20,8 +20,8 @@
                 @Html.AntiForgeryToken()
 
                 @Html.HiddenFor(x => x.Id)
-                @Html.HiddenFor(x => x.GlobalTranslationId)
-                @Html.HiddenFor(x => x.GlobalPhraseId)
+                @Html.HiddenFor(x => x.TranslationLanguageId)
+                @Html.HiddenFor(x => x.PhraseId)
                 @Html.HiddenFor(x => x.Audio)
                 <div class="field-container ">
                     @Html.LabelFor(x => x.Phrase)
