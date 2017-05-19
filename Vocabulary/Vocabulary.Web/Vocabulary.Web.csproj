@@ -14,7 +14,7 @@
     <RootNamespace>Vocabulary.Web</RootNamespace>
     <AssemblyName>Vocabulary.Web</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
-    <MvcBuildViews>false</MvcBuildViews>
+    <MvcBuildViews>true</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
@@ -151,48 +151,70 @@
     <Reference Include="WebMatrix.WebData, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_LocalResources\GlobalRes.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GlobalRes.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_LocalResources\GlobalRes.ru.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GlobalRes.ru.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_LocalResources\GlobalRes.uk.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GlobalRes.uk.resx</DependentUpon>
+    </Compile>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\AdminController.cs" />
-    <Compile Include="Controllers\GlobalExampleController.cs" />
-    <Compile Include="Controllers\GlobalPhraseController.cs" />
-    <Compile Include="Controllers\GlobalTranslationController.cs" />
-    <Compile Include="Controllers\GlossaryController.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
+    <Compile Include="Areas\Admin\Controllers\ExamplesController.cs" />
+    <Compile Include="Areas\Admin\Controllers\GlossariesController.cs" />
+    <Compile Include="Areas\Admin\Controllers\PhrasesController.cs" />
+    <Compile Include="Areas\Admin\Controllers\TranslationsController.cs" />
+    <Compile Include="Areas\Admin\Models\ExampleViewModel.cs" />
+    <Compile Include="Areas\Admin\Models\FullPhraseViewModel.cs" />
+    <Compile Include="Areas\Admin\Models\GlobalListViewModel.cs" />
+    <Compile Include="Areas\Admin\Models\GlossaryViewModel.cs" />
+    <Compile Include="Areas\Admin\Models\ParseExamplesViewModel.cs" />
+    <Compile Include="Areas\Admin\Models\ParsePhraseViewModel.cs" />
+    <Compile Include="Areas\Admin\Models\ParsingTool.cs" />
+    <Compile Include="Areas\Admin\Models\PhraseViewModel.cs" />
+    <Compile Include="Areas\Admin\Models\TranslationViewModel.cs" />
+    <Compile Include="Areas\Main\Controllers\AccountController.cs" />
+    <Compile Include="Areas\Main\Controllers\HomeController.cs" />
+    <Compile Include="Areas\Main\MainAreaRegistration.cs" />
+    <Compile Include="Areas\Main\Models\LoginViewModel.cs" />
+    <Compile Include="Areas\Main\Models\RegistrationViewModel.cs" />
+    <Compile Include="Areas\User\Controllers\GlossaryController.cs" />
+    <Compile Include="Areas\User\Controllers\VocabularyController.cs" />
+    <Compile Include="Areas\User\Models\GlossaryListViewModel.cs" />
+    <Compile Include="Areas\User\Models\GlossaryViewModel.cs" />
+    <Compile Include="Areas\User\Models\VocabularyListViewModel.cs" />
+    <Compile Include="Areas\User\UserAreaRegistration.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\NinjectControllerFactory.cs" />
-    <Compile Include="Models\Admin\ExampleViewModel.cs" />
-    <Compile Include="Models\Admin\FullPhraseViewModel.cs" />
-    <Compile Include="Models\Admin\GlobalListViewModel.cs" />
-    <Compile Include="Models\Admin\GlossaryViewModel.cs" />
-    <Compile Include="Models\Account\LoginViewModel.cs" />
-    <Compile Include="Models\Admin\ParseExamplesViewModel.cs" />
-    <Compile Include="Models\Admin\ParsePhraseViewModel.cs" />
-    <Compile Include="Models\Admin\PhraseViewModel.cs" />
-    <Compile Include="Models\Account\RegistrationViewModel.cs" />
-    <Compile Include="Models\Admin\TranslationViewModel.cs" />
-    <Compile Include="Models\GlossaryController\GlossaryListViewModel.cs" />
-    <Compile Include="Models\GlossaryController\GlossaryViewModel.cs" />
-    <Compile Include="Models\User\VocabularyListViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\added.png" />
     <Content Include="Content\ajax-loader.gif" />
+    <Content Include="Content\arrow-up-down.png" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\flags-logo-sprite.png" />
     <Content Include="Content\glossary-logo.png" />
-    <Content Include="Content\last-page.png" />
     <Content Include="Content\nav-sprite.png" />
+    <Content Include="Content\page-nav.png" />
+    <Content Include="Content\page-navigation.png" />
     <Content Include="Content\resize-icon.jpg" />
     <Content Include="Content\soundIcon.png" />
     <Content Include="Content\sprite.all.png" />
@@ -262,6 +284,57 @@
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Content\bootstrap.min.css.map" />
     <Content Include="Content\bootstrap.css.map" />
+    <EmbeddedResource Include="App_LocalResources\GlobalRes.uk.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>GlobalRes.uk.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Content Include="Areas\Admin\Views\Web.config" />
+    <Content Include="Areas\Admin\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\Admin\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Admin\Views\Phrases\MainPage.cshtml" />
+    <Content Include="Areas\Admin\Views\Phrases\AddNewGlobalPhrase.cshtml" />
+    <Content Include="Areas\Admin\Views\Phrases\AddPhrasesByParse.cshtml" />
+    <Content Include="Areas\Admin\Views\Phrases\AddSentencesByParse.cshtml" />
+    <Content Include="Areas\Admin\Views\Phrases\AddWordsByParse.cshtml" />
+    <Content Include="Areas\Admin\Views\Phrases\EditGlobalPhrase.cshtml" />
+    <Content Include="Areas\Admin\Views\Phrases\GetPhrasesNavigation.cshtml" />
+    <Content Include="Areas\Admin\Views\Examples\AddExample.cshtml" />
+    <Content Include="Areas\Admin\Views\Examples\AddExamplesByParse.cshtml" />
+    <Content Include="Areas\Admin\Views\Examples\EditExample.cshtml" />
+    <Content Include="Areas\Admin\Views\Examples\MainPage.cshtml" />
+    <Content Include="Areas\Admin\Views\Examples\GetExamplesNavigation.cshtml" />
+    <Content Include="Areas\Admin\Views\Glossaries\AddGlossary.cshtml" />
+    <Content Include="Areas\Admin\Views\Glossaries\AddPhrasesToGlossary.cshtml" />
+    <Content Include="Areas\Admin\Views\Glossaries\EditGlossary.cshtml" />
+    <Content Include="Areas\Admin\Views\Glossaries\GetGlossariesNavigation.cshtml" />
+    <Content Include="Areas\Admin\Views\Glossaries\GetGlossaryPhrasesNavigation.cshtml" />
+    <Content Include="Areas\Admin\Views\Glossaries\MainPage.cshtml" />
+    <Content Include="Areas\Admin\Views\Translations\AddTranslation.cshtml" />
+    <Content Include="Areas\Admin\Views\Translations\EditTranslation.cshtml" />
+    <Content Include="Areas\Admin\Views\Translations\GetTranslationsNavigation.cshtml" />
+    <Content Include="Areas\Admin\Views\Translations\MainPage.cshtml" />
+    <Content Include="Areas\Admin\Views\Glossaries\SelectedGlossary.cshtml" />
+    <Content Include="Areas\Admin\Views\Glossaries\AddWordsToGlossaryByParse.cshtml" />
+    <Content Include="Areas\User\Views\Web.config" />
+    <Content Include="Areas\Main\Views\Web.config" />
+    <Content Include="Areas\Main\Views\Home\BeginingPage.cshtml" />
+    <Content Include="Areas\Main\Views\Shared\PartialGuestHeader.cshtml" />
+    <Content Include="Areas\Main\Views\Account\Registration.cshtml" />
+    <Content Include="Areas\Main\Views\Account\SignIn.cshtml" />
+    <Content Include="Areas\Main\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\Main\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\User\Views\Glossary\Glossaries.cshtml" />
+    <Content Include="Areas\User\Views\Glossary\GlossariesData.cshtml" />
+    <Content Include="Areas\User\Views\Glossary\Glossary.cshtml" />
+    <Content Include="Areas\User\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\User\Views\Vocabulary\Vocabulary.cshtml" />
+    <Content Include="Areas\User\Views\Vocabulary\VocabularyData.cshtml" />
+    <Content Include="Areas\User\Views\_ViewStart.cshtml" />
+    <EmbeddedResource Include="App_LocalResources\GlobalRes.ru.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>GlobalRes.ru.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <None Include="Scripts\jquery-1.9.1.intellisense.js" />
     <Content Include="libmp3lame.32.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -290,7 +363,10 @@
     <Content Include="Scripts\Users\glossaryScript.js" />
     <Content Include="Scripts\Users\mainPage.js" />
     <Content Include="Scripts\Users\previewImage.js" />
-    <Content Include="Scripts\Users\vocabularyScript.js" />
+    <Content Include="Scripts\Users\resizeWidgetScript.js" />
+    <Content Include="Scripts\Users\Vocabulary\vocabularyAjaxScript.js" />
+    <Content Include="Scripts\Users\Vocabulary\vocabularyScript.js" />
+    <Content Include="Scripts\Users\Vocabulary\vocabularyScrollScript.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -303,44 +379,13 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\BeginingPage.cshtml" />
-    <Content Include="Views\Account\Registration.cshtml" />
     <Content Include="Views\Shared\PartialGuestHeader.cshtml" />
     <Content Include="Views\Shared\PartialUserHeader.cshtml" />
-    <Content Include="Views\Account\SignIn.cshtml" />
-    <Content Include="Views\Admin\MainPage.cshtml" />
-    <Content Include="Views\Admin\AddNewGlobalPhrase.cshtml" />
-    <Content Include="Views\Admin\EditGlobalPhrase.cshtml" />
-    <Content Include="Views\Admin\AddWordsByParse.cshtml" />
-    <Content Include="Views\Admin\TranslationMainPage.cshtml" />
-    <Content Include="Views\Admin\AddTranslation.cshtml" />
-    <Content Include="Views\Admin\EditTranslation.cshtml" />
-    <Content Include="Views\Admin\ExampleMainPage.cshtml" />
-    <Content Include="Views\Admin\AddExample.cshtml" />
-    <Content Include="Views\Admin\EditExample.cshtml" />
-    <Content Include="Views\Admin\GlossariesMainPage.cshtml" />
-    <Content Include="Views\Admin\AddGlossary.cshtml" />
-    <Content Include="Views\Admin\EditGlossary.cshtml" />
-    <Content Include="Views\Admin\SelectedGlossary.cshtml" />
-    <Content Include="Views\Admin\AddPhrasesToGlossary.cshtml" />
-    <Content Include="Views\Admin\GetGlossariesNavigation.cshtml" />
-    <Content Include="Views\Admin\GetGlossaryPhrasesNavigation.cshtml" />
-    <Content Include="Views\Admin\GetExamplesNavigation.cshtml" />
-    <Content Include="Views\Admin\GetTranslationsNavigation.cshtml" />
-    <Content Include="Views\Admin\GetPhrasesNavigation.cshtml" />
-    <Content Include="Views\Admin\AddWordsToGlossaryByParse.cshtml" />
     <Content Include="Views\Shared\PartialAdminHeader.cshtml" />
-    <Content Include="Views\Glossary\Glossaries.cshtml" />
-    <Content Include="Views\Glossary\Glossary.cshtml" />
-    <Content Include="Views\Glossary\GlossariesData.cshtml" />
-    <Content Include="Views\User\Vocabulary.cshtml" />
-    <Content Include="Views\User\VocabularyData.cshtml" />
-    <Content Include="Views\Admin\AddPhrasesByParse.cshtml" />
-    <Content Include="Views\Admin\AddSentencesByParse.cshtml" />
-    <Content Include="Views\Admin\AddExamplesByParse.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -350,6 +395,12 @@
       <Project>{64a51d04-95f0-4257-a382-19fa3f793e68}</Project>
       <Name>Vocabulary.Domain</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="App_LocalResources\GlobalRes.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>GlobalRes.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

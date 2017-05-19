@@ -1,11 +1,13 @@
-﻿function playAudio(id) {
+﻿var $widget = $('.pop-up-widget');
+
+function playAudio(id) {
     $("audio#" + id).get(0).play();
 }
 
 function getDataAjax(id, langId, index) {
     $.ajax({
         type: "GET",
-        url: "/Glossary/GlossaryData/?glossaryId=" + id + "&langId=" + langId + "&index=" + index,
+        url: "/User/Glossary/GlossaryData/?glossaryId=" + id + "&langId=" + langId + "&index=" + index,
         success: function (data) {
             if (data == null) return;
             var p = $('.pop-up-widget');
@@ -104,7 +106,7 @@ $(".add-button").click(function (e) {
 
     $.ajax({
         type: "POST",
-        url: "/Glossary/AddPhraseToVocabulary/" + target.attr('data-phrase-id') + "?glossaryId=" + target.attr('data-glossary-id'),
+        url: "/User/Glossary/AddPhraseToVocabulary/" + target.attr('data-phrase-id') + "?glossaryId=" + target.attr('data-glossary-id'),
         success: function(data) {
             if (!data.result) return;
             target.removeClass('not-added').addClass('added');
@@ -142,7 +144,7 @@ $(".add-buttons a").click(function(e) {
     var b = t.attr('data-status') == "learned";
     $.ajax({
         type: "POST",
-        url: "/Glossary/AddPhraseToVocabulary/" + p.attr('data-phrase-id') + 
+        url: "/User/Glossary/AddPhraseToVocabulary/" + p.attr('data-phrase-id') + 
             "?glossaryId=" + p.attr('data-glossary-id') + "&status=" + b,
         success: function(data) {
             if (!data.result) return;
@@ -154,95 +156,3 @@ $(".add-buttons a").click(function(e) {
     });
 });
 
-//keyboard events for navigation 
-var $widget = $('.pop-up-widget');
-$(document).on('keypress', function (e) {
-    if ($widget.css('display') == 'none') return;
-    if (e.charCode == 32) {
-        playAudio('widget-audio');
-        if (e.target == document.body) {
-            e.preventDefault();
-        }
-    } else {
-        switch (e.keyCode) {
-            case 37:
-                {
-                    $('.left-button').click();
-                    break;
-                }
-            case 39:
-                {
-                    $('.right-button').click();
-                    break;
-                }
-            case 13:
-                {
-                    $('.resize-button').click();
-                    break;
-                }
-            case 38:
-            case 40:
-                {
-                    e.preventDefault();
-                }
-        }
-    }
-});
-
-// widget expand set-up
-var wg = $widget.find('.widget-glossary-container');
-var lb = $widget.find(".left-button");
-var rb = $widget.find(".right-button");
-var wp = $widget.find(".widget-phrase-container");
-var we = $widget.find(".widget-examples-container");
-
-//widget-glossary-container
-var wg_top = "5%";
-var wg_top_small = "20%";
-
-var wg_width = "80%";
-var wg_width_small = "35%";
-
-var wg_height = "90%";
-var wg_height_small = "60%";
-
-//navigation-button
-var nb_left = "5.5%";
-var nb_left_small = "25%";
-
-//widget-phrase-container
-var wp_width = "40%";
-var wp_width_small = "100%";
-
-var wp_bottom = "40%";
-var wp_bottom_small = "35%";
-
-$('.resize-button').click(function (e) {
-    var t = $(e.currentTarget);
-    t.toggleClass('expand');
-    if (t.hasClass('expand')) {
-        wg.css('top', wg_top);
-        wg.css('width', wg_width);
-        wg.css('height', wg_height);
-
-        lb.css('left', nb_left);
-        rb.css('right', nb_left);
-
-        wp.css('width', wp_width);
-        wp.css('bottom', wp_bottom);
-
-        we.css('display', 'block');
-    } else {
-        we.css('display', 'none');
-
-        wg.css('top', wg_top_small);
-        wg.css('width', wg_width_small);
-        wg.css('height', wg_height_small);
-
-        lb.css('left', nb_left_small);
-        rb.css('right', nb_left_small);
-
-        wp.css('width', wp_width_small);
-        wp.css('bottom', wp_bottom_small);
-    }
-});

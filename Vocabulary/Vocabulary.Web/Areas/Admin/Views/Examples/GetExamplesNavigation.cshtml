@@ -1,0 +1,79 @@
+﻿@model int
+
+@{
+    var elementsPerPage = int.Parse(Request.QueryString["count"] ?? Session["ElementsPerPage"].ToString());
+    var pagesCount = (int)Math.Ceiling((double)Model / elementsPerPage);
+    var phraseId = decimal.Parse(Session["GlobalPhraseId"].ToString());
+    
+    int curPage;
+    int.TryParse(Request["page"], out curPage);
+    if (curPage == 0)
+    {
+        curPage = 1;
+    }
+    var shift = (curPage == 1 || curPage == pagesCount) ? 5 : 3;
+}
+
+<div class="navigation-container">
+
+    @* previous page button *@
+    @if (curPage == 1)
+    {
+        <a href="#" class="page-navigation disabled" title="@GlobalRes.PrevPage"><div class="page-navigation-prev"></div></a>
+    }
+    else
+    {
+        // first page (goto begin)
+        @Html.ActionLink(GlobalRes.Begin, "MainPage", new { page = 1, count = elementsPerPage, phraseId })
+
+        <a href="@Url.Action("MainPage", new { page = (curPage - 1), count = elementsPerPage, phraseId })"
+           class="page-navigation" title="@GlobalRes.PrevPage"><div class=" page-navigation-prev"></div></a>
+        // first page
+        @Html.ActionLink("1", "MainPage", new { page = 1, count = elementsPerPage, phraseId })
+    }
+
+    @{
+        //left shift
+        var preCnt = (curPage - shift) > 1 ? (curPage - shift) : 1;
+        if (preCnt > 1)
+        {
+            <span>...</span>
+        }
+        for (var i = preCnt + 1; i < curPage; i++)
+        {
+            @Html.ActionLink(i.ToString(), "MainPage", new { page = i, count = elementsPerPage, phraseId })
+        }
+
+        // current page
+        @Html.ActionLink(curPage.ToString(), "MainPage", 
+            new { page = curPage, count = elementsPerPage, phraseId }, new { @class = "selected" })
+
+        //right shift
+        var nextCnt = (curPage + shift) < pagesCount ? (curPage + shift) : pagesCount;
+        for (var i = curPage + 1; i < pagesCount && i < nextCnt; i++)
+        {
+            @Html.ActionLink(i.ToString(), "MainPage", new { page = i, count = elementsPerPage, phraseId })
+        }
+        if (nextCnt < pagesCount)
+        {
+            <span>...</span>
+        }
+    }
+
+    @* next page button *@
+    @if (curPage == pagesCount)
+    {
+        <a href="#" class="page-navigation disabled" title="@GlobalRes.NextPage"><div class="page-navigation-next"></div></a>
+    }
+    else
+    {
+        @Html.ActionLink(pagesCount.ToString(), "MainPage", new { page = pagesCount, count = elementsPerPage, phraseId })
+
+        <a href="@Url.Action("MainPage", new { page = (curPage + 1), count = elementsPerPage, phraseId })"
+           class="page-navigation" title="@GlobalRes.NextPage"><div class=" page-navigation-next"></div></a>
+
+        @* last page *@
+        @Html.ActionLink(GlobalRes.End, "MainPage", new { page = pagesCount, count = elementsPerPage, phraseId })
+    }
+
+</div>

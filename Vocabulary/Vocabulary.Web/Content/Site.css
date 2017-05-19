@@ -328,7 +328,8 @@ table, table th {
 }
 
 .navigation-container {
-    margin: 10px;
+    padding: 10px;
+    margin: 20px 50px;
 }
     .navigation-container a {
         margin: 5px;
@@ -339,11 +340,32 @@ table, table th {
         font-stretch: ultra-expanded;
         color: black;
     }
-
     .navigation-container .selected {
         background: rgb(34, 180, 115);
 
     }
+    .navigation-container span {
+        font-size: 1.5em;
+    }
+
+a.page-navigation {
+    padding: 0;
+    background: initial;
+}
+.page-navigation-prev {
+    display: inline-block;
+    margin-bottom: -7px;
+    width: 28px;
+    height: 28px;
+    background: url("page-nav.png") 0 0 no-repeat;
+}
+.page-navigation-next {
+    display: inline-block;
+    margin-bottom: -7px;
+    width: 28px;
+    height: 28px;
+    background: url("page-nav.png") -31px 0 no-repeat;
+}
 
 
 .footer {
@@ -368,11 +390,12 @@ table, table th {
 .language-container .list {
     position: absolute;
     display: none;
+    z-index: 2;
     list-style: none;
     overflow:auto;
     max-height: 500px;
     width: 110px;
-        
+    /*background: white;*/
 }
 .language-container .list li{
     margin: 10px 0;
@@ -488,8 +511,9 @@ table, table th {
 
     .phrase-container .audio {
         display: inline-block;
+        overflow: hidden;
         cursor: pointer;
-        margin: 12px 10px;
+        margin: 0px 10px;
     }
     .phrase-container .phrase {
         display: inline-block;
@@ -729,6 +753,15 @@ a.disabled {
     left: 50%;
     top: 55%;
 }
+.loading-logo#loading-more-data {
+    display: block;
+    left: 50%;
+    top: 15%;
+}
+.loading-container {
+    position: relative;
+    height: 80px;
+}
 /************************Vocabulary Header***************************
 ------------------------------------------------------------------*/
 
@@ -747,10 +780,9 @@ a.disabled {
     .header-menu .search-box {
         display: inline-block;
         float: left;
-        margin-left: 10px;
     }
         .search-box .btn {
-            margin-left: 10px;
+            margin-left: 20px;
         }
         .search-box input {
             margin-top: 5px;
@@ -762,7 +794,7 @@ a.disabled {
     }
         .language div {
             margin: 0;
-            padding: 0 10px;
+            padding: 0 5px;
         }
     .header-menu .learning-state {
         display: inline-block;
@@ -796,4 +828,31 @@ a.disabled {
         bottom: -10px;
         right: 5px;
         font-size: 1em;
+    }
+
+.scroll-navigation-container {
+    display: none;
+    position: fixed;
+    top: 80px;
+    left: 0;
+    width: 80px;
+    height: 100%;
+    background-color: initial;
+}
+    .scroll-navigation-container:hover {
+        opacity: 0.6;
+        cursor: pointer;
+        background-color: rgb(150, 200, 150);
+    }
+.scroll-nav-logo {
+    position: absolute;
+    top: 40px;
+    left: 15px;
+    width: 50px;
+    height: 20px;
+    background: url("arrow-up-down.png") -15px -32px no-repeat;
+    background-size: 80px 50px;
+}
+    .scroll-nav-logo.top {
+        background-position: -15px 2px;
     }

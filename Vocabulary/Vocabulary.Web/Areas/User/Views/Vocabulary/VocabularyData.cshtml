@@ -1,0 +1,227 @@
+﻿@model VocabularyListViewModel
+           
+<div class="main">
+    <div class="layout-positioner">
+        <div class="main-header">
+            <span>@GlobalRes.Vocabulary</span>
+
+            <div class="header-menu">
+                
+                <div class="add-button summary">
+                    <span class="count"></span>
+                    <div class="not-added"></div>
+                </div>
+
+                <div id="main-header-menu">
+                    <div class="search-box">
+                        <div class="col-xs-7">
+                            <input type="text" id="search" placeholder="@GlobalRes.SearchPlaceholder" />
+                        </div>
+                        <a class="btn btn-default" href="javascript:void(0)" id="add-phrase">@GlobalRes.AddNew</a>
+                    </div>
+                    <div class="language">
+                        <div class="col-xs-6">
+                            @Html.DropDownList("phrase-language", Model.Languages, new { @class = "form-control" })
+                        </div>
+                        <div class="col-xs-6">
+                            @Html.DropDownList("translation-language", Model.Languages, new { @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="phrase-type btn-group">
+                        <div class="btn btn-default selected" data-type="All">@GlobalRes.All</div>
+                        <div class="btn btn-default" data-type="Word">@GlobalRes.Word</div>
+                        <div class="btn btn-default" data-type="Phrase">@GlobalRes.Phrases</div>
+                        <div class="btn btn-default" data-type="Sentence">@GlobalRes.Sentence</div>
+                    </div>
+
+                    <div class="learning-state btn-group">
+                        <div class="btn btn-default selected">@GlobalRes.All</div>
+                        <div class="btn btn-default">
+                            <div class="unknown"></div>
+                        </div>
+                        <div class="btn btn-default">
+                            <div class="first"></div>
+                        </div>
+                        <div class="btn btn-default">
+                            <div class="known"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="selected-header-menu" style="display: none">
+
+                    <div class="learning-state btn-group" id="">
+                        <div class="btn btn-default">
+                            <div class="unknown"></div>
+                        </div>
+                        <div class="btn btn-default">
+                            <div class="first"></div>
+                        </div>
+                        <div class="btn btn-default">
+                            <div class="second"></div>
+                        </div>
+                        <div class="btn btn-default">
+                            <div class="third"></div>
+                        </div>
+                        <div class="btn btn-default">
+                            <div class="known"></div>
+                        </div>
+                    </div>
+                    <div class="btn btn-default">
+                        <div class="remove-button" title="@GlobalRes.RemovePhrasesFromVocabulary">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            
+            <div id="loading-container" class="alert-info" style="display: none;">@GlobalRes.Loading</div>
+        </div>
+
+        <div class="loading-logo" id="loading-data"></div>
+
+        <div class="container container-fluid">
+            @for (var i = 0; i < Model.Phrases.Count; i++)
+            {
+                var phrase = Model.Phrases[i];
+                var translation = Model.Translations[i];
+
+                <div class="phrase-container">
+                    <div class="add-button" data-phrase-id="@phrase.Id">
+                        <div class="not-added"></div>
+                    </div>
+
+                    <div class="audio">
+                        <img src="~/Content/soundIcon.png" style="width: 25px; height: 25px;"
+                             onclick="playAudio('audio-@phrase.Id.ToString()')"
+                             title="@GlobalRes.PlayAudio" alt="@GlobalRes.PlayAudio" />
+
+                        <audio id="audio-@phrase.Id.ToString()">
+                            <source src="@Url.Action("GetUsersPhraseAudio", new {id = phrase.Id})" />
+                        </audio>
+                    </div>
+
+                    <div class="content-container" data-phrase-id="@phrase.Id" data-index="@(i+1)"
+                         data-lang-id="@phrase.LanguageId" data-trans-lang-id="@translation.LanguageId"
+                         title="@translation.TranslationPhrase">
+
+                        <div class="phrase">@phrase.Phrase</div>
+
+                        @if (!string.IsNullOrEmpty(phrase.Transcription))
+                        {
+                            <div class="transcription">@phrase.Transcription</div>
+                        }
+                        —
+                        <div class="translation">
+                            @translation.TranslationPhrase
+                        </div>
+                    </div>
+
+                    <div class="information">
+                        @if (phrase.GlossaryId != null)
+                        {
+                            <div class="glossary-info" data-glossary-id="@phrase.GlossaryId">
+                                <a href="javascript:void(0)" title="@phrase.GlossaryName">@phrase.GlossaryName</a>
+                            </div>
+                        }
+
+                        <div class="remove-button" data-phrase-id="@phrase.Id" title="@GlobalRes.RemovePhraseFromVocabulary">
+                        </div>
+
+                        <div class="learning-state" title="@GlobalRes.LearningState: @(phrase.LearningState*100)%">
+                            @switch ((int)(phrase.LearningState * 100))
+                            {
+                                case 0:
+                                    <div class="unknown"></div>
+                                    break;
+                                case 25:
+                                    <div class="first"></div>
+                                    break;
+                                case 50:
+                                    <div class="second"></div>
+                                    break;
+                                case 75:
+                                    <div class="third"></div>
+                                    break;
+                                case 100:
+                                    <div class="known"></div>
+                                    break;
+                            }
+                        </div>
+
+                        @if (phrase.Frequency != null)
+                        {
+                            <div class="frequency" title="@GlobalRes.WordRank">@phrase.Frequency</div>
+                        }
+
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="loading-container">
+            <div class="loading-logo" id="loading-more-data"></div>
+        </div>
+        
+        <!--Pop-up widget-->
+        <div class="pop-up-widget" style="display: none">
+            <div class="pop-up-widget background"></div>
+            <div class="container widget-glossary-container">
+                
+                <div class="resize-button expand" title="@GlobalRes.ChangeVidgetSize"></div>
+
+                <div class="remove-button" data-phrase-id="" title="@GlobalRes.RemovePhraseFromVocabulary">
+
+                </div>
+
+                <div class="widget-phrase-container">
+                    <div class="loading-logo" id="loading-phrase"></div>
+                    <div class="phrase"></div>
+
+                    <div class="audio" onclick='playAudio("widget-audio")'>
+                        <img src="~/Content/soundIcon.png" style="width: 25px; height: 25px;"
+                             title="@GlobalRes.PlayAudio" alt="@GlobalRes.PlayAudio" />
+                        <div class="transcription"></div>
+                        <audio id="widget-audio"></audio>
+                    </div>
+                    —
+                    <div class="translation"></div>
+                    <div class="frequency" title="@GlobalRes.WordRank"></div>
+                </div>
+
+                <div class="widget-examples-container">
+                    <h1>@GlobalRes.Examples: <span></span></h1>
+                    <div class="loading-logo" id="loading-examples"></div>
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>@GlobalRes.Phrase</th>
+                                <th>@GlobalRes.Translation</th>
+                                <th>@GlobalRes.Audio</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <a class="left-button" href="javascript: void(0)"></a>
+            <a class="right-button" href="javascript: void(0)"> </a>
+            
+            <div class="element-indicator">
+                <span>5</span>
+                @GlobalRes.OutOf
+                <span>@Model.Phrases.Count</span>
+            </div>
+            
+            <div class="auto-play disabled" title="@GlobalRes.AutoplayTitle"></div>
+
+        </div>
+
+    </div>
+    
+    <div class="scroll-navigation-container">
+        <div class="scroll-nav-logo"></div>
+    </div>
+</div>

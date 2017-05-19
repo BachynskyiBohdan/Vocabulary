@@ -1,0 +1,86 @@
+﻿@model GlobalListViewModel
+@{
+    ViewBag.Title = "MainPage";
+}
+
+<div class="main">
+    <div class="layout-positioner">
+        
+        <div class="main-header">
+            @if (TempData.ContainsKey("Success"))
+            {
+                <div class="alert alert-success">@TempData["Success"]</div>
+            }
+            @if (TempData.ContainsKey("Error"))
+            {
+                <div class="alert alert-danger">@TempData["Error"]</div>
+            }
+            
+            @Html.ActionLink("Glossaries", "MainPage", new { controller = "Glossaries" }, new { @class = "left btn-primary", title = "Glossaries main page" })
+
+            <span>Phrases Main Page</span>
+            
+            <div class="navigation-menu">
+                @Html.ActionLink("Add phrase", "AddNewGlobalPhrase", new {controller="Phrases"}, new {title = "Add new phrase"})
+                
+                @Html.ActionLink("Parse words", "AddWordsByParse", new { controller = "Phrases" }, new { title = "Add new words by parsing web pages" })
+                @Html.ActionLink("Parse phases", "AddPhrasesByParse", new { controller = "Phrases" }, new { title = "Add new phases by parsing text" })
+                @Html.ActionLink("Parse sentences", "AddSentencesByParse", new { controller = "Phrases" }, new { title = "Add new sentences by parsing text" })
+            </div>
+        </div>
+
+        <div class="layout-collumn container-fluid">
+            <table class="table table-hover">
+                <thead>
+                    <tr onclick="sortTable()">
+                        <th>ID</th>
+                        <th>Phrase</th>
+                        <th>PhraseType</th>
+                        <th>Transcription</th>
+                        <th>Frequency</th>
+                        <th>LanguageID</th>
+                        <th>Language</th>
+                        <th>Audio</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var phrase in Model.GlobalPhrases)
+                    {
+                        <tr>
+                            <td>@phrase.Id</td>
+                            <td>@phrase.Phrase</td>
+                            <td>@phrase.PhraseType</td>
+                            <td>@phrase.Transcription</td>
+                            <td>@phrase.Frequency</td>
+                            <td>@phrase.LanguageId</td>
+                            <td>@Model.Languages[phrase.LanguageId]</td>
+                            <td>
+                                <img src="~/Content/soundIcon.png" style="width: 25px; height: 25px;" onclick="playAudio(@phrase.Id.ToString())" />
+                                    
+                                <audio id="@phrase.Id.ToString()">
+                                    <source src="@Url.Action("GetPhraseAudio", new { controller = "Phrases", id = phrase.Id })" />
+                                </audio>
+                            </td>
+                            <td>
+                                <div class="word-editor">
+                                    @Html.ActionLink("Edit", "EditGlobalPhrase", new { controller = "Phrases", id = phrase.Id }, new { title = "Edit Phrase" })
+                                    @Html.ActionLink("Translations", "MainPage", new { controller = "Translations", phraseId = phrase.Id }, new { title = "Translations  Main Page" })
+                                    @Html.ActionLink("Examples", "MainPage", new { controller = "Examples", phraseId = phrase.Id }, new { title = "Examples Main Page" })
+                                    @Html.ActionLink("Delete", "DeleteGlobalPhrase", new { controller = "Phrases", id = phrase.Id }, new { title = "Delete Phrase" })
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        @Html.Action("GetPhrasesNavigation", "Phrases")
+    </div>
+</div>
+
+
+@section scripts
+{
+    <script src="~/Scripts/Users/mainPage.js"></script>
+}

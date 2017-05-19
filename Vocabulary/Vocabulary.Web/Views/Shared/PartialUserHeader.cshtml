@@ -2,19 +2,21 @@
     <div class="layout-positioner">
 
         <div class="layout-collumn">
-            <p class="info">Sign in as <span>@User.Identity.Name</span></p>
-            <a class="button" href="@Url.Action("SignOut", "Account")" title="Sign out">
-                Sign out
+            <p class="info">@GlobalRes.SignInAs <span>@User.Identity.Name</span></p>
+            <a class="button" href="@Url.Action("SignOut", "Account")" title="@GlobalRes.SignOut">
+                @GlobalRes.SignOut
             </a>
         </div>
 
         <div class="layout-collumn-left">
             <a class="main-logo" href="@Url.Action("Glossaries", "Glossary")">
-                <img src="~/Content/glossary-logo.png" alt="LOGO" />
+                <img src="~/Content/glossary-logo.png" alt="@GlobalRes.Logo" />
             </a>
             <ul class="main-menu">
-                <li><a class="btn btn-default" title="Glossaries main page" href="@Url.Action("Glossaries", "Glossary")">Glossaries</a></li>
-                <li><a class="btn btn-default" title="User Vocabulary" href="@Url.Action("Vocabulary", "User")">Vocabulary</a></li>
+                <li><a class="btn btn-default" title="@GlobalRes.UserGlossariesTitle"
+                        href="@Url.Action("Glossaries", "Glossary")">@GlobalRes.Glossaries</a></li>
+                <li><a class="btn btn-default" title="@GlobalRes.VocabularyTitle"
+   href="@Url.Action("Vocabulary", "Vocabulary")">@GlobalRes.Vocabulary</a></li>
             </ul>
         </div>
     </div>

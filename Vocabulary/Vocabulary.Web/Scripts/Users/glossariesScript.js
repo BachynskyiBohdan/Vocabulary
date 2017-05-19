@@ -106,7 +106,7 @@ $.ajaxSetup({
 });
 
 function changeGlossaryLanguage(id, page, count) {
-    var url = "/Glossary/GlossariesData?langId=" + id;
+    var url = "/User/Glossary/GlossariesData?langId=" + id;
     if (page != undefined) {
         url += "&page=" + page;
     }
