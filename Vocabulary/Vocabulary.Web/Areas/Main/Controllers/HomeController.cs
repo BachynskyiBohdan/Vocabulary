@@ -1,11 +1,18 @@
 ﻿using System.Web.Mvc;
 using System.Web.Security;
+using Vocabulary.Domain.Abstract;
 using Vocabulary.Web.Controllers;
 
 namespace Vocabulary.Web.Areas.Main.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
+        private readonly IUserRepository _userRepository;
+
+        public HomeController(ILanguageRepository languageRepository)
+            : base(languageRepository) {}
+
+
         public ActionResult Index()
         {
             if (User.Identity.IsAuthenticated)
@@ -16,7 +23,7 @@ namespace Vocabulary.Web.Areas.Main.Controllers
                 }
                 return RedirectToAction("Index", "Glossary", new { area = "User" });
             }
-            return RedirectToAction("BeginingPage");
+            return RedirectToAction("BeginingPage", new {area = "Main"});
         }
 
         public ActionResult BeginingPage()

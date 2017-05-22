@@ -300,4 +300,25 @@
   <data name="PrevPage" xml:space="preserve">
     <value>Попередня сторінка</value>
   </data>
+  <data name="Email" xml:space="preserve">
+    <value>Електронна скринька</value>
+  </data>
+  <data name="Enter" xml:space="preserve">
+    <value>Вхід</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Пароль</value>
+  </data>
+  <data name="QuickRegistration" xml:space="preserve">
+    <value>Швидка реєстрація</value>
+  </data>
+  <data name="Register" xml:space="preserve">
+    <value>Зареєструватися</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>Логін</value>
+  </data>
+  <data name="UsernameOrEmail" xml:space="preserve">
+    <value>Логін чи електронна скринька</value>
+  </data>
 </root>

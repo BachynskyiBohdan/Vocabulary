@@ -319,7 +319,6 @@
     <Content Include="Areas\User\Views\Web.config" />
     <Content Include="Areas\Main\Views\Web.config" />
     <Content Include="Areas\Main\Views\Home\BeginingPage.cshtml" />
-    <Content Include="Areas\Main\Views\Shared\PartialGuestHeader.cshtml" />
     <Content Include="Areas\Main\Views\Account\Registration.cshtml" />
     <Content Include="Areas\Main\Views\Account\SignIn.cshtml" />
     <Content Include="Areas\Main\Views\Shared\_Layout.cshtml" />
@@ -335,6 +334,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>GlobalRes.ru.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="Properties\PublishProfiles\Vocabulary.pubxml" />
     <None Include="Scripts\jquery-1.9.1.intellisense.js" />
     <Content Include="libmp3lame.32.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

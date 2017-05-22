@@ -196,6 +196,15 @@ namespace Vocabulary.Web.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Email.
+        /// </summary>
+        public static string Email {
+            get {
+                return ResourceManager.GetString("Email", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Email is already exist.
         /// </summary>
         public static string EmailAlreadyExist {
@@ -219,6 +228,15 @@ namespace Vocabulary.Web.App_LocalResources {
         public static string End {
             get {
                 return ResourceManager.GetString("End", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Sign in.
+        /// </summary>
+        public static string Enter {
+            get {
+                return ResourceManager.GetString("Enter", resourceCulture);
             }
         }
         
@@ -313,6 +331,15 @@ namespace Vocabulary.Web.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Password.
+        /// </summary>
+        public static string Password {
+            get {
+                return ResourceManager.GetString("Password", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Pasword should contain only latin letters and numbers. Minimum 6, maximum 16 symbols..
         /// </summary>
         public static string PasswordParameterError {
@@ -363,6 +390,24 @@ namespace Vocabulary.Web.App_LocalResources {
         public static string PrevPage {
             get {
                 return ResourceManager.GetString("PrevPage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Quick registration.
+        /// </summary>
+        public static string QuickRegistration {
+            get {
+                return ResourceManager.GetString("QuickRegistration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Register.
+        /// </summary>
+        public static string Register {
+            get {
+                return ResourceManager.GetString("Register", resourceCulture);
             }
         }
         
@@ -538,11 +583,29 @@ namespace Vocabulary.Web.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Username.
+        /// </summary>
+        public static string Username {
+            get {
+                return ResourceManager.GetString("Username", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Username is already exist.
         /// </summary>
         public static string UsernameAlreadyExist {
             get {
                 return ResourceManager.GetString("UsernameAlreadyExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Username or email.
+        /// </summary>
+        public static string UsernameOrEmail {
+            get {
+                return ResourceManager.GetString("UsernameOrEmail", resourceCulture);
             }
         }
         

@@ -13,16 +13,16 @@ namespace Vocabulary.Web
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
-            //routes.MapRoute(
-            //    name: "Admin",
-            //    url: "Admin/{action}/{phraseId}",
-            //    defaults: new { controller = "Admin", action = "MainPage", phraseId = UrlParameter.Optional }
-            //);
-
+            routes.MapRoute(
+                name: "Default_lang",
+                url: "{lang}/{controller}/{action}/{id}",
+                defaults: new { area = "Main", controller = "Home", action = "Index", id = UrlParameter.Optional},
+                constraints: new { lang = @"en|ru|uk"}
+            );
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new {area = "Main", controller = "Home", action = "Index", id = UrlParameter.Optional }
+                defaults: new {area = "Main", controller = "Home", action = "Index", id = UrlParameter.Optional, lang = "en" }
             );
             routes.MapRoute(
                 "404-PageNotFound",
