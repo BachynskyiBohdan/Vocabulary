@@ -6,7 +6,7 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <TimeStampOfAssociatedLegacyPublishXmlFile />
-    <_PublishTargetUrl>D:\ASP.Net\Vocabulary</_PublishTargetUrl>
+    <_PublishTargetUrl>E:\ASP.Net\Vocabulary</_PublishTargetUrl>
   </PropertyGroup>
   <ItemGroup>
     <File Include="Areas/Admin/Views/Examples/AddExample.cshtml">
@@ -97,7 +97,7 @@
       <publishTime>05/22/2017 14:15:23</publishTime>
     </File>
     <File Include="Areas/Main/Views/Home/BeginingPage.cshtml">
-      <publishTime>05/22/2017 14:45:24</publishTime>
+      <publishTime>05/29/2017 16:52:19</publishTime>
     </File>
     <File Include="Areas/Main/Views/Shared/PartialGuestHeader.cshtml">
       <publishTime>04/24/2017 17:48:13</publishTime>
@@ -112,19 +112,19 @@
       <publishTime>05/16/2017 16:56:05</publishTime>
     </File>
     <File Include="Areas/User/Views/Glossary/Glossaries.cshtml">
-      <publishTime>05/16/2017 17:26:30</publishTime>
+      <publishTime>06/25/2017 17:27:02</publishTime>
     </File>
     <File Include="Areas/User/Views/Glossary/GlossariesData.cshtml">
       <publishTime>05/16/2017 20:26:40</publishTime>
     </File>
     <File Include="Areas/User/Views/Glossary/Glossary.cshtml">
-      <publishTime>05/17/2017 20:25:48</publishTime>
+      <publishTime>06/22/2017 17:14:53</publishTime>
     </File>
     <File Include="Areas/User/Views/Shared/_Layout.cshtml">
       <publishTime>05/16/2017 17:20:24</publishTime>
     </File>
     <File Include="Areas/User/Views/Vocabulary/Vocabulary.cshtml">
-      <publishTime>05/17/2017 20:30:42</publishTime>
+      <publishTime>06/22/2017 17:14:30</publishTime>
     </File>
     <File Include="Areas/User/Views/Vocabulary/VocabularyData.cshtml">
       <publishTime>05/17/2017 20:24:47</publishTime>
@@ -153,6 +153,9 @@
     <File Include="bin/HtmlAgilityPack.dll">
       <publishTime>03/21/2017 17:22:08</publishTime>
     </File>
+    <File Include="bin/HtmlAgilityPack.pdb">
+      <publishTime>03/21/2017 17:22:08</publishTime>
+    </File>
     <File Include="bin/libmp3lame.32.dll">
       <publishTime>04/26/2017 14:19:43</publishTime>
     </File>
@@ -178,34 +181,55 @@
       <publishTime>03/08/2017 17:16:20</publishTime>
     </File>
     <File Include="bin/ru/EntityFramework.resources.dll">
-      <publishTime>03/08/2017 17:16:05</publishTime>
+      <publishTime>03/02/2015 09:32:38</publishTime>
     </File>
     <File Include="bin/ru/EntityFramework.SqlServer.resources.dll">
-      <publishTime>03/08/2017 17:16:05</publishTime>
+      <publishTime>03/02/2015 09:32:38</publishTime>
+    </File>
+    <File Include="bin/ru/System.Net.Http.Formatting.resources.dll">
+      <publishTime>09/26/2013 16:54:18</publishTime>
+    </File>
+    <File Include="bin/ru/System.Web.Http.resources.dll">
+      <publishTime>07/09/2013 15:40:30</publishTime>
+    </File>
+    <File Include="bin/ru/System.Web.Http.WebHost.resources.dll">
+      <publishTime>07/09/2013 15:41:14</publishTime>
     </File>
     <File Include="bin/ru/System.Web.Mvc.resources.dll">
-      <publishTime>03/03/2017 21:30:09</publishTime>
+      <publishTime>07/09/2013 15:39:44</publishTime>
     </File>
     <File Include="bin/ru/System.Web.Optimization.resources.dll">
-      <publishTime>03/03/2017 21:30:15</publishTime>
+      <publishTime>08/08/2012 17:53:06</publishTime>
     </File>
     <File Include="bin/ru/System.Web.Providers.resources.dll">
-      <publishTime>03/03/2017 21:30:16</publishTime>
+      <publishTime>12/20/2012 12:13:40</publishTime>
     </File>
     <File Include="bin/ru/System.Web.Razor.resources.dll">
-      <publishTime>03/03/2017 21:30:06</publishTime>
+      <publishTime>07/09/2013 15:40:04</publishTime>
     </File>
     <File Include="bin/ru/System.Web.WebPages.Deployment.resources.dll">
-      <publishTime>03/03/2017 21:30:07</publishTime>
+      <publishTime>07/09/2013 15:42:22</publishTime>
     </File>
     <File Include="bin/ru/System.Web.WebPages.Razor.resources.dll">
-      <publishTime>03/03/2017 21:30:08</publishTime>
+      <publishTime>07/09/2013 15:42:22</publishTime>
     </File>
     <File Include="bin/ru/System.Web.WebPages.resources.dll">
-      <publishTime>03/03/2017 21:30:08</publishTime>
+      <publishTime>07/09/2013 15:42:22</publishTime>
     </File>
     <File Include="bin/ru/Vocabulary.Web.resources.dll">
-      <publishTime>05/22/2017 14:45:51</publishTime>
+      <publishTime>06/25/2017 12:34:44</publishTime>
+    </File>
+    <File Include="bin/System.Net.Http.Formatting.dll">
+      <publishTime>03/03/2017 21:29:50</publishTime>
+    </File>
+    <File Include="bin/System.Web.Helpers.dll">
+      <publishTime>11/25/2015 16:39:04</publishTime>
+    </File>
+    <File Include="bin/System.Web.Http.dll">
+      <publishTime>03/03/2017 21:29:53</publishTime>
+    </File>
+    <File Include="bin/System.Web.Http.WebHost.dll">
+      <publishTime>03/03/2017 21:29:54</publishTime>
     </File>
     <File Include="bin/System.Web.Mvc.dll">
       <publishTime>03/03/2017 21:29:48</publishTime>
@@ -229,16 +253,31 @@
       <publishTime>03/03/2017 21:29:46</publishTime>
     </File>
     <File Include="bin/uk/Vocabulary.Web.resources.dll">
-      <publishTime>05/22/2017 14:45:51</publishTime>
+      <publishTime>06/25/2017 12:34:44</publishTime>
     </File>
     <File Include="bin/Vocabulary.Domain.dll">
-      <publishTime>05/21/2017 20:12:23</publishTime>
+      <publishTime>06/21/2017 18:10:03</publishTime>
+    </File>
+    <File Include="bin/Vocabulary.Domain.dll.config">
+      <publishTime>03/08/2017 17:15:41</publishTime>
+    </File>
+    <File Include="bin/Vocabulary.Domain.pdb">
+      <publishTime>06/21/2017 18:10:03</publishTime>
     </File>
     <File Include="bin/Vocabulary.Web.dll">
-      <publishTime>05/22/2017 14:45:50</publishTime>
+      <publishTime>06/25/2017 12:34:43</publishTime>
+    </File>
+    <File Include="bin/Vocabulary.Web.pdb">
+      <publishTime>06/25/2017 12:34:43</publishTime>
     </File>
     <File Include="bin/WebGrease.dll">
       <publishTime>03/03/2017 21:30:04</publishTime>
+    </File>
+    <File Include="bin/WebMatrix.Data.dll">
+      <publishTime>08/08/2012 17:58:48</publishTime>
+    </File>
+    <File Include="bin/WebMatrix.WebData.dll">
+      <publishTime>08/08/2012 17:58:46</publishTime>
     </File>
     <File Include="Content/added.png">
       <publishTime>03/28/2017 18:59:19</publishTime>
@@ -292,7 +331,7 @@
       <publishTime>04/20/2017 16:39:56</publishTime>
     </File>
     <File Include="Content/Site.css">
-      <publishTime>05/18/2017 16:45:22</publishTime>
+      <publishTime>06/25/2017 12:11:41</publishTime>
     </File>
     <File Include="Content/soundIcon.png">
       <publishTime>03/24/2017 14:46:15</publishTime>
@@ -490,7 +529,7 @@
       <publishTime>04/26/2017 14:19:36</publishTime>
     </File>
     <File Include="packages.config">
-      <publishTime>04/26/2017 14:20:04</publishTime>
+      <publishTime>05/29/2017 15:31:32</publishTime>
     </File>
     <File Include="Scripts/bootstrap.js">
       <publishTime>03/16/2017 21:11:01</publishTime>
@@ -541,10 +580,10 @@
       <publishTime>03/03/2017 21:29:41</publishTime>
     </File>
     <File Include="Scripts/Users/glossariesScript.js">
-      <publishTime>05/17/2017 15:11:41</publishTime>
+      <publishTime>06/25/2017 15:39:14</publishTime>
     </File>
     <File Include="Scripts/Users/glossaryScript.js">
-      <publishTime>05/17/2017 20:26:50</publishTime>
+      <publishTime>06/25/2017 15:40:43</publishTime>
     </File>
     <File Include="Scripts/Users/mainPage.js">
       <publishTime>04/26/2017 17:28:48</publishTime>
@@ -556,13 +595,13 @@
       <publishTime>05/17/2017 20:25:20</publishTime>
     </File>
     <File Include="Scripts/Users/Vocabulary/vocabularyAjaxScript.js">
-      <publishTime>05/17/2017 20:29:35</publishTime>
+      <publishTime>06/25/2017 20:12:57</publishTime>
     </File>
     <File Include="Scripts/Users/Vocabulary/vocabularyScript.js">
-      <publishTime>05/17/2017 20:29:45</publishTime>
+      <publishTime>06/25/2017 20:13:13</publishTime>
     </File>
     <File Include="Scripts/Users/Vocabulary/vocabularyScrollScript.js">
-      <publishTime>05/17/2017 20:28:02</publishTime>
+      <publishTime>06/22/2017 17:12:54</publishTime>
     </File>
     <File Include="Scripts/_references.js">
       <publishTime>03/16/2017 21:10:59</publishTime>
@@ -589,7 +628,7 @@
       <publishTime>05/16/2017 17:27:35</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>05/22/2017 14:46:23</publishTime>
+      <publishTime>06/25/2017 20:14:21</publishTime>
     </File>
   </ItemGroup>
 </Project>

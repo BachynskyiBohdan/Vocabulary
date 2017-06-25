@@ -1,0 +1,31 @@
+﻿@model GlobalTranslation
+
+@{
+    ViewBag.Title = "Редактировать перевод";
+}
+
+<div class="main">
+    <div class="layout-positioner">
+        <div class="main-header">
+            <h1>Редактирование перевода для: @Session["GlobalPhrase"]</h1>
+        </div>
+        <div class="form-container">
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+                @Html.HiddenFor(x => x.Id)
+                @Html.HiddenFor(x => x.LanguageId)
+                @Html.HiddenFor(x => x.GlobalPhraseId)
+                <div>
+                    @Html.LabelFor(x => x.TranslationPhrase)
+                    @Html.TextAreaFor(x => x.TranslationPhrase, new { placeholder = "Translation", @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.TranslationPhrase)
+                </div>
+                <div class="field-container">
+                    <input type="submit" class="btn btn-default" value="Завершить редактирование" />
+                </div>
+            }
+        </div>
+    </div>
+</div>

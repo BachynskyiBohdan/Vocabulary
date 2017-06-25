@@ -1,0 +1,44 @@
+﻿@model Vocabulary.Domain.Entities.GlobalExample
+
+@{
+    ViewBag.Title = "Редактировать перевод";
+}
+
+<div class="main">
+    <div class="layout-positioner">
+        <div class="main-header">
+            <h1>Редактирование примера для: @Session["GlobalPhrase"]</h1>
+        </div>
+        <div class="form-container">
+            @using (Html.BeginForm("EditExample", "Examples", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+
+                @Html.HiddenFor(x => x.Id)
+                @Html.HiddenFor(x => x.TranslationLanguageId)
+                @Html.HiddenFor(x => x.PhraseId)
+                @Html.HiddenFor(x => x.Audio)
+                <div class="field-container ">
+                    @Html.LabelFor(x => x.Phrase)
+                    @Html.TextBoxFor(x => x.Phrase, new { placeholder = "Phrase", @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.Phrase)
+                </div>
+                <div class="field-container ">
+                    @Html.LabelFor(x => x.Translation)
+                    @Html.TextBoxFor(x => x.Translation, new { placeholder = "Translation", @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.Translation)
+                </div>
+                <div class="field-container">
+                    <audio controls>
+                        <source src="@Url.Action("GetExampleAudio", new {id = Model.Id})"/>
+                    </audio>
+                    <label for="audio">Audio file:</label>
+                    <input type="file" id="audio" name="audio"/>
+                </div>
+                <div class="field-container">
+                    <input type="submit" class="btn btn-default" value="Завершить редактирование" />
+                </div>
+            }
+        </div>
+    </div>
+</div>

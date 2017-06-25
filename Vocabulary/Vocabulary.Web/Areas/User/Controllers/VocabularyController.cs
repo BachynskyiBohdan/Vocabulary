@@ -254,11 +254,11 @@ namespace Vocabulary.Web.Areas.User.Controllers
                     " <audio id='" + ex[i].Id;
                 if (ex[i].IsUsersExample)
                 {
-                    str += "'> <source src='/User/GetUsersExampleAudio?id=" + ex[i].Id + "'/></audio></td>";
+                    str += "'> <source src='/User/Vocabulary/GetUsersExampleAudio?id=" + ex[i].Id + "'/></audio></td>";
                 }
                 else
                 {
-                    str += "'> <source src='/User/GetGlobalExampleAudio?id=" + ex[i].Id + "'/></audio></td>";
+                    str += "'> <source src='/User/Vocabulary/GetGlobalExampleAudio?id=" + ex[i].Id + "'/></audio></td>";
                 }
                 l.Add(str);
             }

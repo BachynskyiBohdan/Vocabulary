@@ -1,0 +1,38 @@
+﻿@using Vocabulary.Web.App_LocalResources
+<div class="header">
+    <div class="layout-positioner">
+
+        <div class="layout-collumn">
+            <p class="info">@GlobalRes.SignInAs <span>@User.Identity.Name</span></p>
+            <a class="button" href="@Url.Action("SignOut", "Account", new {area = "Main"})" title="@GlobalRes.SignOut">
+                @GlobalRes.SignOut
+            </a>
+        </div>
+
+        <div class="layout-collumn-left">
+            <a class="main-logo" href="@Url.Action("MainPage", "Phrases", new { area = "Admin" })">
+                <img src="~/Content/glossary-logo.png" alt="LOGO" />
+            </a>
+            <ul class="main-menu">
+                <li>
+                    <a class="btn btn-default" title="@GlobalRes.UserGlossariesTitle"
+                       href="@Url.Action("Glossaries", "Glossary", new { area = "User" })">@GlobalRes.Glossaries</a>
+                </li> 
+                <li>
+                    <a class="btn btn-default" title="@GlobalRes.VocabularyTitle"
+                       href="@Url.Action("Vocabulary", "Vocabulary", new { area = "User" })">@GlobalRes.Vocabulary</a>
+                </li>
+            </ul>
+            <ul class="main-menu">
+                <li>
+                    <a class="btn btn-default" title="@GlobalRes.AdminGlossariesTitle"
+                       href="@Url.Action("MainPage", "Glossaries", new { area = "Admin" })">@GlobalRes.Glossaries</a>
+                </li>
+                <li>
+                    <a class="btn btn-default" title="@GlobalRes.PhrasesTitle"
+                       href="@Url.Action("MainPage", "Phrases", new { area = "Admin" })">@GlobalRes.Phrases</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

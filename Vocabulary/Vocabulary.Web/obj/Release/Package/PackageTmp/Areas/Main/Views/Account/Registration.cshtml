@@ -1,0 +1,36 @@
+﻿@model RegistrationViewModel
+
+@{
+    ViewBag.Title = GlobalRes.Registration;
+}
+
+<div class="main">
+    <div class="layout-positioner">
+        <div class="main-header">
+            <h1>Быстрая регистрация</h1>
+        </div>
+        <div class="form-container">
+            @using (Html.BeginForm())
+            {
+                <div class="field-container auth-field">
+                    <div class="logo logo-username"></div>
+                    @Html.TextBoxFor(x => x.UserName, new {placeholder = GlobalRes.Username})
+                    @Html.ValidationMessageFor(x => x.UserName)
+                </div>
+                <div class="field-container auth-field">
+                    <div class="logo logo-email"></div>
+                    @Html.TextBoxFor(x => x.Email, new {placeholder = GlobalRes.Email})
+                    @Html.ValidationMessageFor(x => x.Email)
+                </div>
+                <div class="field-container auth-field">
+                    <div class="logo logo-password"></div>
+                    @Html.PasswordFor(x => x.Password, new {placeholder = GlobalRes.Password})
+                    @Html.ValidationMessageFor(x => x.Password)
+                </div>
+                <div class="field-container auth-button">
+                    <input type="submit" value="@GlobalRes.Register" />
+                </div>
+            }
+        </div>
+    </div>
+</div>

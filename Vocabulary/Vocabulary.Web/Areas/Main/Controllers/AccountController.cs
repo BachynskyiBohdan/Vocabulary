@@ -19,10 +19,14 @@ namespace Vocabulary.Web.Areas.Main.Controllers
             _userRepository = userRepository;
         }
 
-        public ActionResult SignIn()
+        public ActionResult SignIn(string ReturnUrl = null)
         {
             if (WebSecurity.IsAuthenticated)
             {
+                if (ReturnUrl != null)
+                {
+                    return Redirect(ReturnUrl);
+                }
                 if (Request.UrlReferrer != null)
                     return Redirect(Request.UrlReferrer.ToString());
                 if (Roles.IsUserInRole("Admin"))
